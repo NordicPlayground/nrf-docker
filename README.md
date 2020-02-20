@@ -1,5 +1,7 @@
 # Building NCS applications with Docker
 
+![Docker + Zephyr -> merged.hex](./diagram.png)
+
 Clone the repo: `git clone https://github.com/NordicPlayground/fw-nrfconnect-nrf`
 
 Copy the Dockerfile to e.g. `/tmp/Dockerfile`, you might need to adapt the installation of [the requirements](./Dockerfile#L48-L51).
