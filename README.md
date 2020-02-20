@@ -13,7 +13,8 @@ Build the image (this is only needed once):
 
 Build the firmware for the `asset_tracker` application example:
 
-    docker run --name ncs --rm -v ${PWD}:/workdir/ncs/fw-nrfconnect-nrf ncs /bin/bash -c 'cd ncs/fw-nrfconnect-nrf/applications/asset_tracker; west build -p auto -b nrf9160_pca20035ns'
+    docker run --name ncs --rm -v ${PWD}:/workdir/ncs/fw-nrfconnect-nrf ncs \
+      /bin/bash -c 'cd ncs/fw-nrfconnect-nrf/applications/asset_tracker; west build -p auto -b nrf9160_pca20035ns'
 
 The firmware file will be in `applications/asset_tracker/build/zephyr/merged.hex`.
 
@@ -26,6 +27,7 @@ You only need to run this command to build.
     wget https://raw.githubusercontent.com/coderbyheart/fw-nrfconnect-nrf-docker/saga/Dockerfile
     cd fw-nrfconnect-nrf
     docker build -t ncs -f /tmp/Dockerfile .
-    docker run --name ncs --rm -v /tmp/fw-nrfconnect-nrf:/workdir/ncs/fw-nrfconnect-nrf ncs /bin/bash -c 'cd ncs/fw-nrfconnect-nrf/applications/asset_tracker; west build -p auto -b nrf9160_pca20035ns'
+    docker run --name ncs --rm -v /tmp/fw-nrfconnect-nrf:/workdir/ncs/fw-nrfconnect-nrf ncs \
+      /bin/bash -c 'cd ncs/fw-nrfconnect-nrf/applications/asset_tracker; west build -p auto -b nrf9160_pca20035ns'
     ls -la applications/asset_tracker/build/zephyr/merged.hex
     
