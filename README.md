@@ -21,7 +21,7 @@ You only need to run this command to build.
 
     cd /tmp
     git clone https://github.com/NordicPlayground/fw-nrfconnect-nrf
-    ko
+    wget https://raw.githubusercontent.com/coderbyheart/fw-nrfconnect-nrf-docker/saga/Dockerfile
     cd fw-nrfconnect-nrf
     docker build -t ncs -f /tmp/Dockerfile .
     docker run --name ncs --rm -v /tmp/fw-nrfconnect-nrf:/workdir/ncs/fw-nrfconnect-nrf ncs /bin/bash -c 'cd ncs/fw-nrfconnect-nrf/applications/asset_tracker; west build -p auto -b nrf9160_pca20035ns'
