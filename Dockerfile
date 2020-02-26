@@ -41,13 +41,13 @@ ENV PATH=~/.local/bin:/usr/share/rust/.cargo/bin:$PATH
 FROM base
 ADD . /workdir/ncs/nrf
 # Zephyr dependencies
-RUN cd /workdir/ncs/nrf && \
-    west init -l && \
-    west update && \
-    cd .. && \
+RUN cd /workdir/ncs/nrf; west init -l
+RUN cd /workdir/ncs; west update
+RUN cd /workdir/ncs \
     pip3 install pc_ble_driver_py && \
     pip3 install -r zephyr/scripts/requirements.txt && \
     pip3 install -r nrf/scripts/requirements.txt && \
     pip3 install -r bootloader/mcuboot/scripts/requirements.txt
+RUN echo "source /workdir/ncs/zephyr/zephyr-env.sh" >> ~/.bashrc
 RUN mkdir /workdir/.cache
 ENV XDG_CACHE_HOME=/workdir/.cache
