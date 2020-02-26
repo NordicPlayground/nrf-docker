@@ -14,12 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - name: Build image and publish
+      - name: Build image
         run: |
+          git clone https://github.com/NordicPlayground/fw-nrfconnect-nrf
+          cd fw-nrfconnect-nrf
           docker build -t fw-nrfconnect-nrf-docker -f Dockerfile .
       - name: Build asset_tracker application
         run: |
-          git clone https://github.com/NordicPlayground/fw-nrfconnect-nrf
           docker run --name fw-nrfconnect-nrf-docker \
             --rm -v ./fw-nrfconnect-nrf:/workdir/ncs/fw-nrfconnect-nrf 
             fw-nrfconnect-nrf-docker \
