@@ -17,4 +17,4 @@ jobs:
           cd fw-nrfconnect-nrf
           docker build -t fw-nrfconnect-nrf-docker -f ../Dockerfile .
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-          docker push
+          docker push fw-nrfconnect-nrf-docker:latest
