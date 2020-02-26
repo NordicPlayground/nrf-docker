@@ -31,3 +31,16 @@ You only need to run this command to build.
       /bin/bash -c 'cd ncs/fw-nrfconnect-nrf/applications/asset_tracker; west build -p auto -b nrf9160_pca20035ns'
     ls -la applications/asset_tracker/build/zephyr/merged.hex
     
+## Using prebuild image from Dockerhub
+
+> *Note:* This is a convenient way to quickly build your firmware but using images from untrusted third-parties poses the risk of exposing your source code.
+
+You can use the pre-build image [`coderbyheart/fw-nrfconnect-nrf-docker:latest`](
+https://hub.docker.com/repository/docker/coderbyheart/fw-nrfconnect-nrf-docker)
+
+    cd /tmp
+    git clone https://github.com/NordicPlayground/fw-nrfconnect-nrf
+    cd fw-nrfconnect-nrf
+    docker run --name ncs --rm -v /tmp/fw-nrfconnect-nrf:/workdir/ncs/fw-nrfconnect-nrf coderbyheart/fw-nrfconnect-nrf-docker:latest \
+      /bin/bash -c 'cd ncs/fw-nrfconnect-nrf/applications/asset_tracker; west build -p auto -b nrf9160_pca20035ns'
+    ls -la applications/asset_tracker/build/zephyr/merged.hex
