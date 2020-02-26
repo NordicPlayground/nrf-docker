@@ -22,7 +22,7 @@ jobs:
       - name: Build asset_tracker application
         run: |
           docker run --name fw-nrfconnect-nrf-docker \
-            --rm -v ./fw-nrfconnect-nrf:/workdir/ncs/fw-nrfconnect-nrf 
+            --rm -v ./fw-nrfconnect-nrf:/workdir/ncs/fw-nrfconnect-nrf \
             fw-nrfconnect-nrf-docker \
             /bin/bash -c 'cd ncs/fw-nrfconnect-nrf/applications/asset_tracker; west build -p always -b nrf9160_pca20035ns'
       - name: Publish image
