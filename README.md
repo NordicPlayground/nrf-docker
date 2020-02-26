@@ -1,5 +1,7 @@
 # Building [NCS](https://github.com/NordicPlayground/fw-nrfconnect-nrf) applications with Docker
 
+![Publish Docker](https://github.com/coderbyheart/fw-nrfconnect-nrf-docker/workflows/Publish%20Docker/badge.svg?branch=saga)
+
 ![Docker + Zephyr -> merged.hex](./diagram.png)
 
 Clone the repo: `git clone https://github.com/NordicPlayground/fw-nrfconnect-nrf`
