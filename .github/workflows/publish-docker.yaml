@@ -18,7 +18,7 @@ jobs:
         run: |
           git clone https://github.com/NordicPlayground/fw-nrfconnect-nrf
           cd fw-nrfconnect-nrf
-          docker build -t fw-nrfconnect-nrf-docker -f Dockerfile .
+          docker build -t fw-nrfconnect-nrf-docker -f ../Dockerfile .
       - name: Build asset_tracker application
         run: |
           docker run --name fw-nrfconnect-nrf-docker \
