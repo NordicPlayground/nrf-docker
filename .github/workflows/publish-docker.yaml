@@ -2,6 +2,10 @@ name: Publish Docker
 
 on: [push]
 
+env:
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,9 +16,8 @@ jobs:
           git clone https://github.com/NordicPlayground/fw-nrfconnect-nrf
           cd fw-nrfconnect-nrf
           docker build -t fw-nrfconnect-nrf-docker -f ../Dockerfile .
-      - name: Publish to Registry
-        uses: HurricanKai/Publish-Docker-Github-Action@master
-        with:
-          name: coderbyheart/fw-nrfconnect-nrf-docker
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Push Docker Container to Registry
+        run: |
+          cd fw-nrfconnect-nrf
+          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+          docker push
