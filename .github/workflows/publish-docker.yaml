@@ -29,4 +29,5 @@ jobs:
         run: |
           cd fw-nrfconnect-nrf
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-          docker push coderbyheart/fw-nrfconnect-nrf-docker:latest
+          docker images
+          docker push coderbyheart/fw-nrfconnect-nrf-docker
