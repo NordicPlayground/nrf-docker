@@ -11,13 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - name: Build image
+      - name: Build image and publish
         run: |
           git clone https://github.com/NordicPlayground/fw-nrfconnect-nrf
           cd fw-nrfconnect-nrf
           docker build -t fw-nrfconnect-nrf-docker -f ../Dockerfile .
-      - name: Push Docker Container to Registry
-        run: |
-          cd fw-nrfconnect-nrf
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
           docker push
