@@ -27,5 +27,6 @@ jobs:
             /bin/bash -c 'cd ncs/fw-nrfconnect-nrf/applications/asset_tracker; west build -p always -b nrf9160_pca20035ns'
       - name: Publish image
         run: |
+          cd fw-nrfconnect-nrf
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
           docker push coderbyheart/fw-nrfconnect-nrf-docker:latest
