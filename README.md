@@ -35,7 +35,7 @@ You only need to run this command to build.
 
 > _Note:_ This is a convenient way to quickly build your firmware but using images from untrusted third-parties poses the risk of exposing your source code.
 
-You can use the pre-build image [`coderbyheart/fw-nrfconnect-nrf-docker:latest`](https://hub.docker.com/repository/docker/coderbyheart/fw-nrfconnect-nrf-docker)
+You can use the pre-build image [`coderbyheart/fw-nrfconnect-nrf-docker:latest`](https://hub.docker.com/repository/docker/coderbyheart/fw-nrfconnect-nrf-docker). The image is build against NCS every night.
 
     cd /tmp
     git clone https://github.com/NordicPlayground/fw-nrfconnect-nrf
