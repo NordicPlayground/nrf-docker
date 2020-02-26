@@ -1,4 +1,4 @@
-# Building NCS applications with Docker
+# Building [NCS](https://github.com/NordicPlayground/fw-nrfconnect-nrf) applications with Docker
 
 ![Docker + Zephyr -> merged.hex](./diagram.png)
 
