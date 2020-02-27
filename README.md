@@ -1,8 +1,10 @@
-# Building [NCS](https://github.com/NordicPlayground/fw-nrfconnect-nrf) applications with Docker
+# Building [NCS](https://github.com/NordicPlayground/fw-nrfconnect-nrf) applications with [Docker](https://docs.docker.com/)
 
 ![Publish Docker](https://github.com/coderbyheart/fw-nrfconnect-nrf-docker/workflows/Publish%20Docker/badge.svg?branch=saga)
 
 ![Docker + Zephyr -> merged.hex](./diagram.png)
+
+Install `docker` on your operating system. On Windows you might want to use the [WSL subsystem](https://docs.docker.com/docker-for-windows/wsl-tech-preview/).
 
 Clone the repo: `git clone https://github.com/NordicPlayground/fw-nrfconnect-nrf`
 
