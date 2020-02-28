@@ -26,7 +26,7 @@ RUN apt-get -y install python3-pip && \
 RUN apt-get -y install ninja-build gperf git python3-setuptools && \
     python3 -m pip install -U setuptools && \
     pip3 install cmake wheel && \
-    pip3 install -U --pre west && \
+    pip3 install -U west && \
     # Newer PIP will not overwrite distutils, so upgrade PyYAML manually \
     python3 -m pip install --ignore-installed -U PyYAML
 ENV LC_ALL=C.UTF-8
