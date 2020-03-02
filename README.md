@@ -1,6 +1,7 @@
-# Building [NCS](https://github.com/NordicPlayground/fw-nrfconnect-nrf) applications with [Docker](https://docs.docker.com/)
+# Building NCS applications with Docker
 
 ![Publish Docker](https://github.com/coderbyheart/fw-nrfconnect-nrf-docker/workflows/Publish%20Docker/badge.svg?branch=saga)
+(*the [Docker](https://docs.docker.com/) image is build against [NCS](https://github.com/NordicPlayground/fw-nrfconnect-nrf) `master` every night.*)
 
 ![Docker + Zephyr -> merged.hex](./diagram.png)
 
@@ -39,7 +40,7 @@ You only need to run this command to build.
 
 > _Note:_ This is a convenient way to quickly build your firmware but using images from untrusted third-parties poses the risk of exposing your source code.
 
-You can use the pre-build image [`coderbyheart/fw-nrfconnect-nrf-docker:latest`](https://hub.docker.com/repository/docker/coderbyheart/fw-nrfconnect-nrf-docker). The image is build against NCS every night.
+You can use the pre-build image [`coderbyheart/fw-nrfconnect-nrf-docker:latest`](https://hub.docker.com/repository/docker/coderbyheart/fw-nrfconnect-nrf-docker).
 
     cd /tmp
     git clone https://github.com/NordicPlayground/fw-nrfconnect-nrf
