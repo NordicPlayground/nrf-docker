@@ -1,7 +1,7 @@
 # Building NCS applications with Docker
 
 ![Publish Docker](https://github.com/coderbyheart/fw-nrfconnect-nrf-docker/workflows/Publish%20Docker/badge.svg?branch=saga)
-(*the [Docker](https://docs.docker.com/) image is build against [NCS](https://github.com/NordicPlayground/fw-nrfconnect-nrf) `master` every night.*)
+(*the [Docker image](https://hub.docker.com/repository/docker/coderbyheart/fw-nrfconnect-nrf-docker) is build against [NCS](https://github.com/NordicPlayground/fw-nrfconnect-nrf) `master` every night.*)
 
 ![Docker + Zephyr -> merged.hex](./diagram.png)
 
