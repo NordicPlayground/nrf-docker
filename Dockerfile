@@ -51,3 +51,5 @@ RUN cd /workdir/ncs \
 RUN echo "source /workdir/ncs/zephyr/zephyr-env.sh" >> ~/.bashrc
 RUN mkdir /workdir/.cache
 ENV XDG_CACHE_HOME=/workdir/.cache
+RUN cd /tmp && \
+    wget https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/Versions-10-x-x/10-7-0/nRFCommandLineTools1070Linuxamd64tar.gz && tar xvzf nRFCommandLineTools1070Linuxamd64tar.gz && dpkg -i *.deb

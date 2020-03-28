@@ -48,3 +48,9 @@ You can use the pre-build image [`coderbyheart/fw-nrfconnect-nrf-docker:latest`]
     docker run --name fw-nrfconnect-nrf-docker --rm -v /tmp/fw-nrfconnect-nrf:/workdir/ncs/fw-nrfconnect-nrf coderbyheart/fw-nrfconnect-nrf-docker:latest \
       /bin/bash -c 'cd ncs/fw-nrfconnect-nrf/applications/asset_tracker; west build -p always -b nrf9160_pca20035ns'
     ls -la applications/asset_tracker/build/zephyr/merged.hex
+
+## Flashing
+
+    docker run --name fw-nrfconnect-nrf-docker --rm -v /tmp/fw-nrfconnect-nrf:/workdir/ncs/fw-nrfconnect-nrf --device=/dev/ttyACM0 \
+      coderbyheart/fw-nrfconnect-nrf-docker:latest \
+      /bin/bash -c 'cd ncs/fw-nrfconnect-nrf/applications/asset_tracker; west flash'
