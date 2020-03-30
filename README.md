@@ -18,8 +18,8 @@ Build the image (this is only needed once):
 
 Build the firmware for the `asset_tracker` application example:
 
-    docker run --name fw-nrfconnect-nrf-docker --rm -v ${PWD}:/workdir/ncs/fw-nrfconnect-nrf fw-nrfconnect-nrf-docker \
-      /bin/bash -c 'cd ncs/fw-nrfconnect-nrf/applications/asset_tracker; west build -p always -b nrf9160_pca20035ns'
+    docker run --rm -v ${PWD}:/workdir/ncs/nrf fw-nrfconnect-nrf-docker \
+      /bin/bash -c 'cd ncs/nrf/applications/asset_tracker; west build -p always -b nrf9160_pca20035ns'
 
 The firmware file will be in `applications/asset_tracker/build/zephyr/merged.hex`.
 
@@ -27,30 +27,49 @@ You only need to run this command to build.
 
 ## Full example
 
-    cd /tmp
     git clone https://github.com/NordicPlayground/fw-nrfconnect-nrf
     wget https://raw.githubusercontent.com/coderbyheart/fw-nrfconnect-nrf-docker/saga/Dockerfile
     cd fw-nrfconnect-nrf
     docker build --no-cache=true -t fw-nrfconnect-nrf-docker -f /tmp/Dockerfile .
-    docker run --name fw-nrfconnect-nrf-docker --rm -v /tmp/fw-nrfconnect-nrf:/workdir/ncs/fw-nrfconnect-nrf fw-nrfconnect-nrf-docker \
-      /bin/bash -c 'cd ncs/fw-nrfconnect-nrf/applications/asset_tracker; west build -p always -b nrf9160_pca20035ns'
+    docker run --rm -v ${PWD}:/workdir/ncs/nrf fw-nrfconnect-nrf-docker \
+      /bin/bash -c 'cd ncs/nrf/applications/asset_tracker; west build -p always -b nrf9160_pca20035ns'
     ls -la applications/asset_tracker/build/zephyr/merged.hex
 
-## Using prebuild image from Dockerhub
+## Using pre-built image from Dockerhub
 
 > _Note:_ This is a convenient way to quickly build your firmware but using images from untrusted third-parties poses the risk of exposing your source code.
 
-You can use the pre-build image [`coderbyheart/fw-nrfconnect-nrf-docker:latest`](https://hub.docker.com/repository/docker/coderbyheart/fw-nrfconnect-nrf-docker).
+You can use the pre-built image [`coderbyheart/fw-nrfconnect-nrf-docker:latest`](https://hub.docker.com/repository/docker/coderbyheart/fw-nrfconnect-nrf-docker).
 
-    cd /tmp
     git clone https://github.com/NordicPlayground/fw-nrfconnect-nrf
     cd fw-nrfconnect-nrf
-    docker run --name fw-nrfconnect-nrf-docker --rm -v /tmp/fw-nrfconnect-nrf:/workdir/ncs/fw-nrfconnect-nrf coderbyheart/fw-nrfconnect-nrf-docker:latest \
-      /bin/bash -c 'cd ncs/fw-nrfconnect-nrf/applications/asset_tracker; west build -p always -b nrf9160_pca20035ns'
+    docker run --rm -v ${PWD}:/workdir/ncs/nrf coderbyheart/fw-nrfconnect-nrf-docker:latest \
+      /bin/bash -c 'cd ncs/nrf/applications/asset_tracker; west build -p always -b nrf9160_pca20035ns'
     ls -la applications/asset_tracker/build/zephyr/merged.hex
 
 ## Flashing
 
-    docker run --name fw-nrfconnect-nrf-docker --rm -v /tmp/fw-nrfconnect-nrf:/workdir/ncs/fw-nrfconnect-nrf --device=/dev/ttyACM0 \
+    cd fw-nrfconnect-nrf
+    docker run --rm -v ${PWD}:/workdir/ncs/nrf --device=/dev/ttyACM0 --privileged \
       coderbyheart/fw-nrfconnect-nrf-docker:latest \
-      /bin/bash -c 'cd ncs/fw-nrfconnect-nrf/applications/asset_tracker; west flash'
+      /bin/bash -c 'cd ncs/nrf/applications/asset_tracker; west flash'
+
+## Interactive usage
+
+    cd fw-nrfconnect-nrf
+    docker run -it --name fw-nrfconnect-nrf-docker -v ${PWD}:/workdir/ncs/nrf --device=/dev/ttyACM0 --privileged \
+    coderbyheart/fw-nrfconnect-nrf-docker:latest /bin/bash
+
+Then, inside the container:
+
+    cd ncs/nrf/applications/asset_tracker
+    west build -p always -b nrf9160_pca20035ns
+    west flash
+    west build
+    ...
+
+Meanwhile, inside or outside of the container, you may modify the code and repeat the build/flash cycle.
+
+Later after closing the container you may re-open it by name to continue where you left off:
+
+    docker start -i fw-nrfconnect-nrf-docker
