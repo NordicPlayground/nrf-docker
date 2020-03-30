@@ -18,18 +18,17 @@ jobs:
       - uses: actions/checkout@master
       - name: Build image
         run: |
-          git clone https://github.com/NordicPlayground/fw-nrfconnect-nrf
-          cd fw-nrfconnect-nrf
+          git clone https://github.com/NordicPlayground/fw-nrfconnect-nrf nrf
+          cd nrf
           docker build -t coderbyheart/fw-nrfconnect-nrf-docker -f ../Dockerfile .
       - name: Build asset_tracker application
         run: |
-          docker run --name fw-nrfconnect-nrf-docker \
-            --rm -v ${PWD}/fw-nrfconnect-nrf:/workdir/ncs/fw-nrfconnect-nrf \
+          docker run --rm -v ${PWD}/nrf:/workdir/ncs/nrf \
             coderbyheart/fw-nrfconnect-nrf-docker \
-            /bin/bash -c 'cd ncs/fw-nrfconnect-nrf/applications/asset_tracker; west build -p always -b nrf9160_pca20035ns'
+            /bin/bash -c 'cd ncs/nrf/applications/asset_tracker; west build -p always -b nrf9160_pca20035ns'
       - name: Publish image
         run: |
-          cd fw-nrfconnect-nrf
+          cd nrf
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
           docker images
           docker push coderbyheart/fw-nrfconnect-nrf-docker
