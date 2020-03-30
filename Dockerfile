@@ -34,11 +34,9 @@ RUN mkdir /workdir/ncs && \
     # Newer PIP will not overwrite distutils, so upgrade PyYAML manually
     python3 -m pip install --ignore-installed -U PyYAML
 
-COPY . /workdir/ncs/nrf
-
 # Build image, contains project-specific dependencies
 FROM base
-ADD . /workdir/ncs/nrf
+COPY . /workdir/ncs/nrf
 RUN \
     # Zephyr requirements of nrf
     cd /workdir/ncs/nrf; west init -l && \
