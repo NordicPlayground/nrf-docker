@@ -9,7 +9,6 @@ on:
 
 env:
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
 
 jobs:
   build:
@@ -29,6 +28,6 @@ jobs:
       - name: Publish image
         run: |
           cd nrf
-          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+          docker login -u coderbyheart -p $DOCKER_PASSWORD
           docker images
           docker push coderbyheart/fw-nrfconnect-nrf-docker
