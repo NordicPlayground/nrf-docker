@@ -19,12 +19,12 @@ RUN mkdir /workdir/ncs && \
     | tar xj && \
     mkdir tmp && cd tmp && \
     # Device Tree Compiler 1.4.7
-    wget -q http://mirrors.kernel.org/ubuntu/pool/main/d/device-tree-compiler/device-tree-compiler_1.4.7-3_amd64.deb && \
+    wget -q http://mirrors.edge.kernel.org/ubuntu/pool/main/d/device-tree-compiler/device-tree-compiler_1.4.7-3ubuntu2_amd64.deb && \
     # Nordic command line tools
     wget -qO- https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/Versions-10-x-x/10-7-0/nRFCommandLineTools1070Linuxamd64tar.gz \
     | tar xz && \
     dpkg -i *.deb && \
-    cd ..; rm -rf tmp && \
+    cd .. && rm -rf tmp && \
     # Latest PIP & Python dependencies
     python3 -m pip install -U pip && \
     python3 -m pip install -U setuptools && \
