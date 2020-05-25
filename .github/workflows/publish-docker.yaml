@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@master
       - name: Build image
         run: |
-          git clone https://github.com/NordicPlayground/fw-nrfconnect-nrf nrf
+          git clone https://github.com/nrfconnect/sdk-nrf nrf
           cd nrf
           docker build -t coderbyheart/fw-nrfconnect-nrf-docker -f ../Dockerfile .
       - name: Build asset_tracker application
