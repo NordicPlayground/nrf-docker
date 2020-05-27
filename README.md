@@ -54,6 +54,20 @@ You can use the pre-built image [`coderbyheart/fw-nrfconnect-nrf-docker:latest`]
       coderbyheart/fw-nrfconnect-nrf-docker:latest \
       /bin/bash -c 'cd ncs/nrf/applications/asset_tracker; west flash'
 
+## ClangFormat
+
+The image comes with [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html) and the [nRF Connect SDK formatting rules](https://github.com/nrfconnect/sdk-nrf/blob/master/.clang-format) so you can run for example
+
+    find ./src -type f -iname \*.h -o -iname \*.c \
+        | xargs -I@ /bin/bash -c "\
+            tmpfile=$(mktemp /tmp/clang-formatted.XXXXXX) && \
+            docker run --rm -i coderbyheart/fw-nrfconnect-nrf-docker clang-format < @ > $tmpfile && \
+            cmp --silent @ $tmpfile || (mv $tmpfile @; echo @ formatted.)"
+
+to format your sources.
+
+> _Note:_ Instead of having `clang-format` overwrite the source code file itself, the above command passes the source code file on stdin to clang-format and then overwrites it outside of the container. Otherwise the overwritten file will be owner by the root user (because the Docker daemon is run as root).
+
 ## Interactive usage
 
     cd sdk-nrf

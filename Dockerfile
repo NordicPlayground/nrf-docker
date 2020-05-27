@@ -4,7 +4,9 @@ WORKDIR /workdir
 
 # System dependencies
 RUN mkdir /workdir/ncs && \
-    apt-get -y update && apt-get -y upgrade && apt-get -y install \
+    apt-get -y update && \
+    apt-get -y upgrade && \
+    apt-get -y install \
         wget \
         python3-pip \
         ninja-build \
@@ -28,11 +30,16 @@ RUN mkdir /workdir/ncs && \
     # Latest PIP & Python dependencies
     python3 -m pip install -U pip && \
     python3 -m pip install -U setuptools && \
-    pip3 install cmake wheel && \
-    pip3 install -U west && \
-    pip3 install pc_ble_driver_py && \
+    python3 -m pip install cmake wheel && \
+    python3 -m pip install -U west && \
+    python3 -m pip install pc_ble_driver_py && \
     # Newer PIP will not overwrite distutils, so upgrade PyYAML manually
-    python3 -m pip install --ignore-installed -U PyYAML
+    python3 -m pip install --ignore-installed -U PyYAML && \
+    # ClangFormat
+    python3 -m pip install -U six && \
+    apt-get -y install clang-format-9 && \
+    ln -s /usr/bin/clang-format-9 /usr/bin/clang-format && \
+    wget -qO- https://raw.githubusercontent.com/nrfconnect/sdk-nrf/master/.clang-format > /workdir/.clang-format
 
 # Build image, contains project-specific dependencies
 FROM base
@@ -41,9 +48,9 @@ RUN \
     # Zephyr requirements of nrf
     cd /workdir/ncs/nrf; west init -l && \
     cd /workdir/ncs; west update && \
-    pip3 install -r zephyr/scripts/requirements.txt && \
-    pip3 install -r nrf/scripts/requirements.txt && \
-    pip3 install -r bootloader/mcuboot/scripts/requirements.txt && \
+    python3 -m pip install -r zephyr/scripts/requirements.txt && \
+    python3 -m pip install -r nrf/scripts/requirements.txt && \
+    python3 -m pip install -r bootloader/mcuboot/scripts/requirements.txt && \
     echo "source /workdir/ncs/zephyr/zephyr-env.sh" >> ~/.bashrc && \
     mkdir /workdir/.cache && \
     rm -rf /workdir/ncs/nrf
