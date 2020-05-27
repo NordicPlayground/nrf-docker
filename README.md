@@ -58,11 +58,14 @@ You can use the pre-built image [`coderbyheart/fw-nrfconnect-nrf-docker:latest`]
 
 The image comes with [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html) and the [nRF Connect SDK formatting rules](https://github.com/nrfconnect/sdk-nrf/blob/master/.clang-format) so you can run for example
 
+    docker run --name fw-nrfconnect-nrf-docker -d coderbyheart/fw-nrfconnect-nrf-docker tail -f /dev/null
     find ./src -type f -iname \*.h -o -iname \*.c \
         | xargs -I@ /bin/bash -c "\
-            tmpfile=$(mktemp /tmp/clang-formatted.XXXXXX) && \
-            docker run --rm -i coderbyheart/fw-nrfconnect-nrf-docker clang-format < @ > $tmpfile && \
-            cmp --silent @ $tmpfile || (mv $tmpfile @; echo @ formatted.)"
+            tmpfile=\$(mktemp /tmp/clang-formatted.XXXXXX) && \
+            docker exec -i fw-nrfconnect-nrf-docker clang-format < @ > \$tmpfile && \
+            cmp --silent @ \$tmpfile || (mv \$tmpfile @; echo @ formatted.)"
+    docker kill fw-nrfconnect-nrf-docker
+    docker rm fw-nrfconnect-nrf-docker
 
 to format your sources.
 
