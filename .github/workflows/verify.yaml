@@ -16,4 +16,4 @@ jobs:
         run: |
           docker run --rm -v ${PWD}/nrf:/workdir/ncs/nrf \
             coderbyheart/fw-nrfconnect-nrf-docker \
-            /bin/bash -c 'cd ncs/nrf/applications/asset_tracker; west build -p always -b nrf9160_pca20035ns'
+            /bin/bash -c 'cd ncs/nrf/applications/asset_tracker; west build -p always -b nrf9160dk_nrf9160ns'

@@ -19,7 +19,7 @@ Build the image (this is only needed once):
 Build the firmware for the `asset_tracker` application example:
 
     docker run --rm -v ${PWD}:/workdir/ncs/nrf fw-nrfconnect-nrf-docker \
-      /bin/bash -c 'cd ncs/nrf/applications/asset_tracker; west build -p always -b nrf9160_pca20035ns'
+      /bin/bash -c 'cd ncs/nrf/applications/asset_tracker; west build -p always -b nrf9160dk_nrf9160ns'
 
 The firmware file will be in `applications/asset_tracker/build/zephyr/merged.hex`.
 
@@ -28,11 +28,11 @@ You only need to run this command to build.
 ## Full example
 
     git clone https://github.com/nrfconnect/sdk-nrf
-    wget https://raw.githubusercontent.com/coderbyheart/fw-nrfconnect-nrf-docker/saga/Dockerfile
+    wget https://raw.githubusercontent.com/coderbyheart/fw-nrfconnect-nrf-docker/saga/Dockerfile -O /tmp/Dockerfile
     cd sdk-nrf
     docker build --no-cache=true -t fw-nrfconnect-nrf-docker -f /tmp/Dockerfile .
     docker run --rm -v ${PWD}:/workdir/ncs/nrf fw-nrfconnect-nrf-docker \
-      /bin/bash -c 'cd ncs/nrf/applications/asset_tracker; west build -p always -b nrf9160_pca20035ns'
+      /bin/bash -c 'cd ncs/nrf/applications/asset_tracker; west build -p always -b nrf9160dk_nrf9160ns'
     ls -la applications/asset_tracker/build/zephyr/merged.hex
 
 ## Using pre-built image from Dockerhub
@@ -44,7 +44,7 @@ You can use the pre-built image [`coderbyheart/fw-nrfconnect-nrf-docker:latest`]
     git clone https://github.com/nrfconnect/sdk-nrf
     cd sdk-nrf
     docker run --rm -v ${PWD}:/workdir/ncs/nrf coderbyheart/fw-nrfconnect-nrf-docker:latest \
-      /bin/bash -c 'cd ncs/nrf/applications/asset_tracker; west build -p always -b nrf9160_pca20035ns'
+      /bin/bash -c 'cd ncs/nrf/applications/asset_tracker; west build -p always -b nrf9160dk_nrf9160ns'
     ls -la applications/asset_tracker/build/zephyr/merged.hex
 
 ## Flashing
