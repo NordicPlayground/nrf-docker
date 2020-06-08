@@ -7,9 +7,13 @@
 
 Install `docker` on your operating system. On Windows you might want to use the [WSL subsystem](https://docs.docker.com/docker-for-windows/wsl-tech-preview/).
 
-Clone the repo: `git clone https://github.com/nrfconnect/sdk-nrf`
+Clone the repo:
+
+    git clone https://github.com/nrfconnect/sdk-nrf
 
 Copy the Dockerfile to e.g. `/tmp/Dockerfile`, you might need to adapt the installation of [the requirements](./Dockerfile#L48-L51).
+
+    wget https://raw.githubusercontent.com/coderbyheart/fw-nrfconnect-nrf-docker/saga/Dockerfile -O /tmp/Dockerfile
 
 Build the image (this is only needed once):
 
