@@ -1,5 +1,5 @@
 # Base image which contains global dependencies
-FROM ubuntu:18.04 as base
+FROM ubuntu:20.04 as base
 WORKDIR /workdir
 
 # System dependencies
@@ -12,7 +12,8 @@ RUN mkdir /workdir/ncs && \
         ninja-build \
         gperf \
         git \
-        python3-setuptools && \
+        python3-setuptools \
+        libncurses5 libncurses5-dev && \
     apt-get -y remove python-cryptography python3-cryptography && \
     apt-get -y clean && apt-get -y autoremove && \
     # GCC ARM Embed Toolchain
