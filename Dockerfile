@@ -53,8 +53,7 @@ RUN \
     python3 -m pip install -r nrf/scripts/requirements.txt && \
     python3 -m pip install -r bootloader/mcuboot/scripts/requirements.txt && \
     echo "source /workdir/ncs/zephyr/zephyr-env.sh" >> ~/.bashrc && \
-    mkdir /workdir/.cache && \
-    rm -rf /workdir/ncs/nrf
+    mkdir /workdir/.cache
 
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
