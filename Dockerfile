@@ -47,8 +47,8 @@ FROM base
 COPY . /workdir/ncs/nrf
 RUN \
     # Zephyr requirements of nrf
-    cd /workdir/ncs/nrf; west init -l && \
-    cd /workdir/ncs; west update && \
+    cd /workdir/ncs/nrf && west init -l && \
+    cd /workdir/ncs && west update && \
     python3 -m pip install -r zephyr/scripts/requirements.txt && \
     python3 -m pip install -r nrf/scripts/requirements.txt && \
     python3 -m pip install -r bootloader/mcuboot/scripts/requirements.txt && \

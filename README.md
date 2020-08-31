@@ -23,7 +23,7 @@ Build the image (this is only needed once):
 Build the firmware for the `asset_tracker` application example:
 
     docker run --rm -v ${PWD}:/workdir/ncs/nrf fw-nrfconnect-nrf-docker \
-      /bin/bash -c 'cd ncs/nrf/applications/asset_tracker; west build -p always -b nrf9160dk_nrf9160ns'
+      /bin/bash -c 'cd ncs/nrf/applications/asset_tracker && west build -p always -b nrf9160dk_nrf9160ns'
 
 The firmware file will be in `applications/asset_tracker/build/zephyr/merged.hex`.
 
@@ -36,7 +36,7 @@ You only need to run this command to build.
     cd sdk-nrf
     docker build --no-cache=true -t fw-nrfconnect-nrf-docker -f /tmp/Dockerfile .
     docker run --rm -v ${PWD}:/workdir/ncs/nrf fw-nrfconnect-nrf-docker \
-      /bin/bash -c 'cd ncs/nrf/applications/asset_tracker; west build -p always -b nrf9160dk_nrf9160ns'
+      /bin/bash -c 'cd ncs/nrf/applications/asset_tracker && west build -p always -b nrf9160dk_nrf9160ns'
     ls -la applications/asset_tracker/build/zephyr/merged.hex
 
 ## Using pre-built image from Dockerhub
@@ -48,7 +48,7 @@ You can use the pre-built image [`coderbyheart/fw-nrfconnect-nrf-docker:latest`]
     git clone https://github.com/nrfconnect/sdk-nrf
     cd sdk-nrf
     docker run --rm -v ${PWD}:/workdir/ncs/nrf coderbyheart/fw-nrfconnect-nrf-docker:latest \
-      /bin/bash -c 'cd ncs/nrf/applications/asset_tracker; west build -p always -b nrf9160dk_nrf9160ns'
+      /bin/bash -c 'cd ncs/nrf/applications/asset_tracker && west build -p always -b nrf9160dk_nrf9160ns'
     ls -la applications/asset_tracker/build/zephyr/merged.hex
 
 ## Flashing
@@ -56,7 +56,7 @@ You can use the pre-built image [`coderbyheart/fw-nrfconnect-nrf-docker:latest`]
     cd sdk-nrf
     docker run --rm -v ${PWD}:/workdir/ncs/nrf --device=/dev/ttyACM0 --privileged \
       coderbyheart/fw-nrfconnect-nrf-docker:latest \
-      /bin/bash -c 'cd ncs/nrf/applications/asset_tracker; west flash'
+      /bin/bash -c 'cd ncs/nrf/applications/asset_tracker && west flash'
 
 ## ClangFormat
 
@@ -67,7 +67,7 @@ The image comes with [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html)
         | xargs -I@ /bin/bash -c "\
             tmpfile=\$(mktemp /tmp/clang-formatted.XXXXXX) && \
             docker exec -i fw-nrfconnect-nrf-docker clang-format < @ > \$tmpfile && \
-            cmp --silent @ \$tmpfile || (mv \$tmpfile @; echo @ formatted.)"
+            cmp --silent @ \$tmpfile || (mv \$tmpfile @ && echo @ formatted.)"
     docker kill fw-nrfconnect-nrf-docker
     docker rm fw-nrfconnect-nrf-docker
 
