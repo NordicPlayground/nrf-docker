@@ -51,6 +51,14 @@ You can use the pre-built image [`coderbyheart/fw-nrfconnect-nrf-docker:latest`]
       /bin/bash -c 'cd ncs/nrf/applications/asset_tracker && west build -p always -b nrf9160dk_nrf9160ns'
     ls -la applications/asset_tracker/build/zephyr/merged.hex
 
+### Build a Zephyr sample
+
+This builds the `hci_uart` sample and stores the `hci_uart.hex` file in the current directory:
+
+    docker run --rm -v ${PWD}:/workdir/ncs/nrf coderbyheart/fw-nrfconnect-nrf-docker:latest \
+        /bin/bash -c 'cd ncs/zephyr && west build samples/bluetooth/hci_uart -p always -b nrf9160dk_nrf52840 && \
+        ls -la build/zephyr && cp build/zephyr/zephyr.hex /workdir/ncs/nrf/hci_uart.hex'
+
 ## Flashing
 
     cd sdk-nrf
