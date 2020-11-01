@@ -2,8 +2,6 @@ name: Publish Docker
 
 on:
   push:
-    branches:
-      - saga
   schedule:
     - cron: "0 0 * * *"
 
@@ -15,17 +13,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+      
       - name: Build image
         run: |
           git clone https://github.com/nrfconnect/sdk-nrf nrf
           cd nrf
           docker build -t coderbyheart/fw-nrfconnect-nrf-docker -f ../Dockerfile .
+      
       - name: Build asset_tracker application
         run: |
           docker run --rm -v ${PWD}/nrf:/workdir/ncs/nrf \
             coderbyheart/fw-nrfconnect-nrf-docker \
             /bin/bash -c 'cd ncs/nrf/applications/asset_tracker && west build -p always -b nrf9160dk_nrf9160ns'
+      
+      - name: Extract branch name
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      # extract branch name on pull request
+      - name: Print branch name
+        if: github.event_name == 'pull_request'
+        run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_HEAD_REF})"
+      
       - name: Publish image
+        if: env.BRANCH_NAME == 'saga'
         run: |
           cd nrf
           docker login -u coderbyheart -p $DOCKER_PASSWORD
