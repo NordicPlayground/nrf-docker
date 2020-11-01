@@ -2,6 +2,7 @@ name: Publish Docker
 
 on:
   push:
+    - branch: saga
   schedule:
     - cron: "0 0 * * *"
 
@@ -33,19 +34,7 @@ jobs:
             build/zephyr/merged.hex
             build/zephyr/app_update.bin
 
-      - name: Extract branch name
-        if: github.event_name != 'pull_request'
-        shell: bash
-        run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
-
-      # extract branch name on pull request
-      - name: Print branch name
-        if: github.event_name == 'pull_request'
-        run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_HEAD_REF})"
-
       - name: Publish image
-        if: env.BRANCH_NAME == 'saga'
         run: |
           cd nrf
           docker login -u coderbyheart -p $DOCKER_PASSWORD
