@@ -13,19 +13,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      
+
       - name: Build image
         run: |
           git clone https://github.com/nrfconnect/sdk-nrf nrf
           cd nrf
           docker build -t coderbyheart/fw-nrfconnect-nrf-docker -f ../Dockerfile .
-      
+
       - name: Build asset_tracker application
         run: |
           docker run --rm -v ${PWD}/nrf:/workdir/ncs/nrf \
             coderbyheart/fw-nrfconnect-nrf-docker \
             /bin/bash -c 'cd ncs/nrf/applications/asset_tracker && west build -p always -b nrf9160dk_nrf9160ns'
-      
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: asset_tracker
+          path: |
+            build/zephyr/merged.hex
+            build/zephyr/app_update.bin
+
       - name: Extract branch name
         if: github.event_name != 'pull_request'
         shell: bash
@@ -36,7 +43,7 @@ jobs:
       - name: Print branch name
         if: github.event_name == 'pull_request'
         run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_HEAD_REF})"
-      
+
       - name: Publish image
         if: env.BRANCH_NAME == 'saga'
         run: |
