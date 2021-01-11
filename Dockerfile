@@ -13,7 +13,8 @@ RUN mkdir /workdir/ncs && \
         gperf \
         git \
         python3-setuptools \
-        libncurses5 libncurses5-dev && \
+        libncurses5 libncurses5-dev \
+        libyaml-dev libfdt1 && \
     apt-get -y remove python-cryptography python3-cryptography && \
     apt-get -y clean && apt-get -y autoremove && \
     # GCC ARM Embed Toolchain
@@ -21,8 +22,9 @@ RUN mkdir /workdir/ncs && \
     'https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2019q4/gcc-arm-none-eabi-9-2019-q4-major-x86_64-linux.tar.bz2?revision=108bd959-44bd-4619-9c19-26187abf5225&la=en&hash=E788CE92E5DFD64B2A8C246BBA91A249CB8E2D2D' \
     | tar xj && \
     mkdir tmp && cd tmp && \
-    # Device Tree Compiler 1.4.7
-    wget -q http://mirrors.edge.kernel.org/ubuntu/pool/main/d/device-tree-compiler/device-tree-compiler_1.4.7-3ubuntu2_amd64.deb && \
+    # Device Tree Compiler 1.5.1 (for Ubuntu 20.04)
+    # Releases: https://git.kernel.org/pub/scm/utils/dtc/dtc.git
+    wget -q http://archive.ubuntu.com/ubuntu/pool/main/d/device-tree-compiler/device-tree-compiler_1.5.1-1_amd64.deb && \
     # Nordic command line tools
     wget -qO- https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/Versions-10-x-x/10-10-0-v2/nRFCommandLineTools10100Linuxamd64tar.gz \
     | tar xz && \
