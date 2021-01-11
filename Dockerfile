@@ -26,7 +26,8 @@ RUN mkdir /workdir/ncs && \
     # Releases: https://git.kernel.org/pub/scm/utils/dtc/dtc.git
     wget -q http://archive.ubuntu.com/ubuntu/pool/main/d/device-tree-compiler/device-tree-compiler_1.5.1-1_amd64.deb && \
     # Nordic command line tools
-    wget -qO- https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/Versions-10-x-x/10-10-0-v2/nRFCommandLineTools10100Linuxamd64tar.gz \
+    # Releases: https://www.nordicsemi.com/Software-and-tools/Development-Tools/nRF-Command-Line-Tools/Download
+    wget -qO- https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/Versions-10-x-x/10-12-1/nRFCommandLineTools10121Linuxamd64tar.gz \
     | tar xz && \
     dpkg -i *.deb && \
     cd .. && rm -rf tmp && \
