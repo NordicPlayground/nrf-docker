@@ -2,7 +2,8 @@ name: Publish Docker
 
 on:
   push:
-    - branch: saga
+    branches:
+      - saga
   schedule:
     - cron: "0 0 * * *"
 
