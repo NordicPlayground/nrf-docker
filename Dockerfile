@@ -12,6 +12,7 @@ RUN mkdir /workdir/ncs && \
         ninja-build \
         gperf \
         git \
+        unzip \
         python3-setuptools \
         libncurses5 libncurses5-dev \
         libyaml-dev libfdt1 && \
@@ -27,8 +28,9 @@ RUN mkdir /workdir/ncs && \
     wget -q http://archive.ubuntu.com/ubuntu/pool/main/d/device-tree-compiler/device-tree-compiler_1.5.1-1_amd64.deb && \
     # Nordic command line tools
     # Releases: https://www.nordicsemi.com/Software-and-tools/Development-Tools/nRF-Command-Line-Tools/Download
-    wget -qO- https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/Versions-10-x-x/10-12-1/nRFCommandLineTools10121Linuxamd64.tar.gz \
-    | tar xz && \
+    wget -q https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/Versions-10-x-x/10-13-0/nRF-Command-Line-Tools_10_13_0_Linux64.zip && \
+    unzip nRF-Command-Line-Tools_10_13_0_Linux64.zip && \
+    tar xvzf nRF-Command-Line-Tools_10_13_0_Linux64/nRF-Command-Line-Tools_10_13_0_Linux-amd64.tar.gz && \
     dpkg -i *.deb && \
     cd .. && rm -rf tmp && \
     # Latest PIP & Python dependencies
