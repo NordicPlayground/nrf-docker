@@ -5,6 +5,8 @@
 
 > :information_source: Read more about this aproach [here](https://devzone.nordicsemi.com/nordic/nrf-connect-sdk-guides/b/getting-started/posts/build-ncs-application-firmware-images-using-docker).
 
+> :warning: The `latest` Docker image tag has been deleted. Use `coderbyheart/fw-nrfconnect-nrf-docker:main`.
+
 ![Docker + Zephyr -> merged.hex](./diagram.png)
 
 Install `docker` on your operating system. On Windows you might want to use the [WSL subsystem](https://docs.docker.com/docker-for-windows/wsl-tech-preview/).
