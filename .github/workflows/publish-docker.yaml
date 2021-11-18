@@ -12,28 +12,34 @@ env:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        ncs_branch:
+          - main
+          - v1.7-branch
+          - v1.6-branch
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2
 
       - name: Build image
         run: |
-          git clone https://github.com/nrfconnect/sdk-nrf nrf
+          git clone --single-branch --branch ${{ matrix.ncs_branch }} https://github.com/nrfconnect/sdk-nrf nrf
           cd nrf
-          docker build -t coderbyheart/fw-nrfconnect-nrf-docker -f ../Dockerfile .
+          docker build -t coderbyheart/fw-nrfconnect-nrf-docker:${{ matrix.ncs_branch }} -f ../Dockerfile .
 
       - name: Build asset_tracker application
         run: |
           docker run --rm -v ${PWD}/nrf:/workdir/ncs/nrf \
-            coderbyheart/fw-nrfconnect-nrf-docker \
+            coderbyheart/fw-nrfconnect-nrf-docker:${{ matrix.ncs_branch }} \
             /bin/bash -c 'cd ncs/nrf/applications/asset_tracker && west build -p always -b nrf9160dk_nrf9160ns'
 
       - name: Build asset_tracker_v2 application
         run: |
           docker run --rm -v ${PWD}/nrf:/workdir/ncs/nrf \
-            coderbyheart/fw-nrfconnect-nrf-docker \
+            coderbyheart/fw-nrfconnect-nrf-docker:${{ matrix.ncs_branch }} \
             /bin/bash -c 'cd ncs/nrf/applications/asset_tracker_v2 && west build -p always -b nrf9160dk_nrf9160ns'
-            
+
       - uses: actions/upload-artifact@v2
         with:
           name: asset_tracker
@@ -46,4 +52,4 @@ jobs:
           cd nrf
           docker login -u coderbyheart -p $DOCKER_PASSWORD
           docker images
-          docker push coderbyheart/fw-nrfconnect-nrf-docker
+          docker push coderbyheart/fw-nrfconnect-nrf-docker:${{ matrix.ncs_branch }}

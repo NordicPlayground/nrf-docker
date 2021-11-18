@@ -1,7 +1,7 @@
 # Building NCS applications with Docker
 
 ![Publish Docker](https://github.com/coderbyheart/fw-nrfconnect-nrf-docker/workflows/Publish%20Docker/badge.svg?branch=saga)
-(_the [Docker image](https://hub.docker.com/r/coderbyheart/fw-nrfconnect-nrf-docker) is build against [NCS](https://github.com/nrfconnect/sdk-nrf) `master` every night._)
+(_the [Docker image](https://hub.docker.com/r/coderbyheart/fw-nrfconnect-nrf-docker) is build against [NCS](https://github.com/nrfconnect/sdk-nrf) `main`, `v1.7-branch`, and `v1.6-branch` every night._)
 
 > :information_source: Read more about this aproach [here](https://devzone.nordicsemi.com/nordic/nrf-connect-sdk-guides/b/getting-started/posts/build-ncs-application-firmware-images-using-docker).
 
@@ -45,11 +45,11 @@ You only need to run this command to build.
 
 > _Note:_ This is a convenient way to quickly build your firmware but using images from untrusted third-parties poses the risk of exposing your source code.
 
-You can use the pre-built image [`coderbyheart/fw-nrfconnect-nrf-docker:latest`](https://hub.docker.com/r/coderbyheart/fw-nrfconnect-nrf-docker).
+You can use the pre-built image [`coderbyheart/fw-nrfconnect-nrf-docker:main`](https://hub.docker.com/r/coderbyheart/fw-nrfconnect-nrf-docker).
 
     git clone https://github.com/nrfconnect/sdk-nrf
     cd sdk-nrf
-    docker run --rm -v ${PWD}:/workdir/ncs/nrf coderbyheart/fw-nrfconnect-nrf-docker:latest \
+    docker run --rm -v ${PWD}:/workdir/ncs/nrf coderbyheart/fw-nrfconnect-nrf-docker:main \
       /bin/bash -c 'cd ncs/nrf/applications/asset_tracker && west build -p always -b nrf9160dk_nrf9160ns'
     ls -la applications/asset_tracker/build/zephyr/merged.hex
 
@@ -57,7 +57,7 @@ You can use the pre-built image [`coderbyheart/fw-nrfconnect-nrf-docker:latest`]
 
 This builds the `hci_uart` sample and stores the `hci_uart.hex` file in the current directory:
 
-    docker run --rm -v ${PWD}:/workdir/ncs/nrf coderbyheart/fw-nrfconnect-nrf-docker:latest \
+    docker run --rm -v ${PWD}:/workdir/ncs/nrf coderbyheart/fw-nrfconnect-nrf-docker:main \
         /bin/bash -c 'cd ncs/zephyr && west build samples/bluetooth/hci_uart -p always -b nrf9160dk_nrf52840 && \
         ls -la build/zephyr && cp build/zephyr/zephyr.hex /workdir/ncs/nrf/hci_uart.hex'
 
@@ -65,12 +65,12 @@ This builds the `hci_uart` sample and stores the `hci_uart.hex` file in the curr
 
     cd sdk-nrf
     docker run --rm -v ${PWD}:/workdir/ncs/nrf --device=/dev/ttyACM0 --privileged \
-      coderbyheart/fw-nrfconnect-nrf-docker:latest \
+      coderbyheart/fw-nrfconnect-nrf-docker:main \
       /bin/bash -c 'cd ncs/nrf/applications/asset_tracker && west flash'
 
 ## ClangFormat
 
-The image comes with [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html) and the [nRF Connect SDK formatting rules](https://github.com/nrfconnect/sdk-nrf/blob/master/.clang-format) so you can run for example
+The image comes with [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html) and the [nRF Connect SDK formatting rules](https://github.com/nrfconnect/sdk-nrf/blob/main/.clang-format) so you can run for example
 
     docker run --name fw-nrfconnect-nrf-docker -d coderbyheart/fw-nrfconnect-nrf-docker tail -f /dev/null
     find ./src -type f -iname \*.h -o -iname \*.c \
@@ -89,7 +89,7 @@ to format your sources.
 
     cd sdk-nrf
     docker run -it --name fw-nrfconnect-nrf-docker -v ${PWD}:/workdir/ncs/nrf --device=/dev/ttyACM0 --privileged \
-    coderbyheart/fw-nrfconnect-nrf-docker:latest /bin/bash
+    coderbyheart/fw-nrfconnect-nrf-docker:main /bin/bash
 
 Then, inside the container:
 
