@@ -24,7 +24,7 @@ Build the image (this is only needed once):
     cd sdk-nrf
     docker build --no-cache=true -t fw-nrfconnect-nrf-docker -f /tmp/Dockerfile .
 
-> _Note:_ To build for a Mac with the M1 architecture, you need to specify the `arm64` architecutre when building: `--build-arg arch=arm64`.
+> _:green_apple: Note:_ To build for a Mac with the M1 architecture, you need to specify the `arm64` architecture when building: `--build-arg arch=arm64`.
 
 Build the firmware for the `asset_tracker` application example:
 
@@ -49,7 +49,7 @@ You only need to run this command to build.
 
 > _Note:_ This is a convenient way to quickly build your firmware but using images from untrusted third-parties poses the risk of exposing your source code.
 
-> _Note 2:_ The prebuilt images are not available for `arm64` architecture (Apple M1), since GitHub Actions don't have hosted runners with Apple M1 yet.
+> _:green_apple: Note:_ The prebuilt images are not available for `arm64` architecture (Apple M1), because GitHub Actions don't have hosted runners with Apple M1 yet.
 
 You can use the pre-built image [`coderbyheart/fw-nrfconnect-nrf-docker:main`](https://hub.docker.com/r/coderbyheart/fw-nrfconnect-nrf-docker).
 
