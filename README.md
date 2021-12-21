@@ -38,7 +38,7 @@ Build the image (this is only needed once):
 
 > _:green_apple: Note:_ The prebuilt images are not available for `arm64` architecture (Apple M1), because GitHub Actions don't have hosted runners with Apple M1 yet.
 
-To use the pre-built image [`coderbyheart/fw-nrfconnect-nrf-docker:main`](https://hub.docker.com/r/coderbyheart/fw-nrfconnect-nrf-docker); just add `coderbyheart/` before the image name and `:tag` after. Replace `tag` with one of the [available tags](https://hub.docker.com/r/coderbyheart/fw-nrfconnect-nrf-docker/tags) on the Dockerhub image. The only difference between the tags are which Python dependencies are pre-installed in the image based on the different `requirements.txt` files from the nRF Connect SDK repository's west dependencies.
+To use the pre-built image [`coderbyheart/fw-nrfconnect-nrf-docker:main`](https://hub.docker.com/r/coderbyheart/fw-nrfconnect-nrf-docker); add `coderbyheart/` before the image name and `:tag` after. Replace `tag` with one of the [available tags](https://hub.docker.com/r/coderbyheart/fw-nrfconnect-nrf-docker/tags) on the Dockerhub image. The only difference between the tags are which Python dependencies are pre-installed in the image based on the different `requirements.txt` files from the nRF Connect SDK repository's west dependencies.
 
     docker run --rm -v ${PWD}:/workdir/project coderbyheart/fw-nrfconnect-nrf-docker:main ...
 
@@ -92,7 +92,7 @@ The firmware file will be located here: `nrf/applications/asset_tracker_v2/build
 
 > _Note:_ The `-p always` build argument is to do a pristine build. It is similar to cleaning the build folder and is used because it is less error-prone to a previous build with different configuration. To speed up subsequent build with the same configuration you can remove this argument to avoid re-building code that haven't been modified since the previous build.
 
-To build a stand-alone project, just replace `-w /workdir/project/nrf/applications/asset_tracker_v2` with the name of the applications folder inside the docker container:
+To build a stand-alone project, replace `-w /workdir/project/nrf/applications/asset_tracker_v2` with the name of the applications folder inside the docker container:
 
     # run from the build-with-nrf-connect-sdk
     docker run --rm -v ${PWD}:/workdir/project \
@@ -119,7 +119,7 @@ To build a stand-alone project, just replace `-w /workdir/project/nrf/applicatio
 
 > _Note:_ The `--mr` argument to `west init` specifies the manifest revision, which is the same as the SDK version. It can be a _branch_, _tag_ or a _sha_. It's recommended to select a recent stable version. Which will be tagged. See available [tags in the sdk-nrf repo](https://github.com/nrfconnect/sdk-nrf/tags).
 
-### Build a Zephyr sample
+### Build a Zephyr sample using the hosted image
 
 This builds the `hci_uart` sample and stores the `hci_uart.hex` file in the current directory:
 
@@ -134,7 +134,7 @@ This builds the `hci_uart` sample and stores the `hci_uart.hex` file in the curr
 
     # assumes asset_tracker_v2 built already (see above)
     docker run --rm -v ${PWD}:/workdir/project \
-        -w /workdir/project//workdir/project/nrf/applications/asset_tracker_v2 \
+        -w /workdir/project/nrf/applications/asset_tracker_v2 \
         fw-nrfconnect-nrf-docker \
         --device=/dev/ttyACM0 --privileged \
         fw-nrfconnect-nrf-docker \
