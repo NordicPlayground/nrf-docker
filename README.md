@@ -5,9 +5,9 @@
 
 This project defines a Docker image that contains all dependencies to run `west` commands with the nRF Connect SDK. Bind mount the project folder you'd like to build, and the output will end up in the same folder (nested in build/zephyr subdir of the app).
 
-> :information_source: Read more about this aproach [here](https://devzone.nordicsemi.com/nordic/nrf-connect-sdk-guides/b/getting-started/posts/build-ncs-application-firmware-images-using-docker).
+> ℹ️ Read more about this aproach [here](https://devzone.nordicsemi.com/nordic/nrf-connect-sdk-guides/b/getting-started/posts/build-ncs-application-firmware-images-using-docker).
 
-> :warning: The `latest` Docker image tag has been deleted. Use `coderbyheart/fw-nrfconnect-nrf-docker:main`.
+> ⚠️ The `latest` Docker image tag has been deleted. Use `coderbyheart/fw-nrfconnect-nrf-docker:main`.
 
 ![Docker + Zephyr -> merged.hex](./diagram.png)
 
@@ -28,15 +28,15 @@ Build the image (this is only needed once):
     cd fw-nrfconnect-nrf-docker
     docker build -t fw-nrfconnect-nrf-docker --build-arg sdk_nrf_revision=v1.8-branch .
 
-> _:green_apple: Note:_ To build for a Mac with the M1 architecture, you need to specify the `arm64` architecture when building: `--build-arg arch=arm64`.
+> 🍏 _Note:_ To build for a Mac with the M1 architecture, you need to specify the `arm64` architecture when building: `--build-arg arch=arm64`.
 
-> _Note:_ The `sdk_nrf_revision` build argument can be used to specify what version of the nRF Connect SDK that will be used when looking up dependencies with pip for the SDK and it's west dependency repositories. The value can be a git _tag_, _branch_ or _sha_ from the [nRF Connect SDK repository](https://github.com/nrfconnect/sdk-nrf).
+> ℹ️ The `sdk_nrf_revision` build argument can be used to specify what version of the nRF Connect SDK that will be used when looking up dependencies with pip for the SDK and it's west dependency repositories. The value can be a git _tag_, _branch_ or _sha_ from the [nRF Connect SDK repository](https://github.com/nrfconnect/sdk-nrf).
 
 ### Use pre-built image from Dockerhub
 
-> _Note:_ This is a convenient way to quickly build your firmware but using images from untrusted third-parties poses the risk of exposing your source code.
+> ℹ️ This is a convenient way to quickly build your firmware but using images from untrusted third-parties poses the risk of exposing your source code.
 
-> _:green_apple: Note:_ The prebuilt images are not available for `arm64` architecture (Apple M1), because GitHub Actions don't have hosted runners with Apple M1 yet.
+> 🍏 _Note:_ The prebuilt images are not available for `arm64` architecture (Apple M1), because GitHub Actions don't have hosted runners with Apple M1 yet.
 
 To use the pre-built image [`coderbyheart/fw-nrfconnect-nrf-docker:main`](https://hub.docker.com/r/coderbyheart/fw-nrfconnect-nrf-docker); add `coderbyheart/` before the image name and `:tag` after. Replace `tag` with one of the [available tags](https://hub.docker.com/r/coderbyheart/fw-nrfconnect-nrf-docker/tags) on the Dockerhub image. The only difference between the tags are which Python dependencies are pre-installed in the image based on the different `requirements.txt` files from the nRF Connect SDK repository's west dependencies.
 
@@ -90,7 +90,7 @@ To demonstrate, we'll build the _asset_tracker_v2_ application from sdk-nrf:
 
 The firmware file will be located here: `nrf/applications/asset_tracker_v2/build/zephyr/merged.hex`. Because it's inside the folder that is bind mounted when running the image, it is also available outside of the Docker image.
 
-> _Note:_ The `-p always` build argument is to do a pristine build. It is similar to cleaning the build folder and is used because it is less error-prone to a previous build with different configuration. To speed up subsequent build with the same configuration you can remove this argument to avoid re-building code that haven't been modified since the previous build.
+> ℹ️ The `-p always` build argument is to do a pristine build. It is similar to cleaning the build folder and is used because it is less error-prone to a previous build with different configuration. To speed up subsequent build with the same configuration you can remove this argument to avoid re-building code that haven't been modified since the previous build.
 
 To build a stand-alone project, replace `-w /workdir/project/nrf/applications/asset_tracker_v2` with the name of the applications folder inside the docker container:
 
@@ -117,7 +117,7 @@ To build a stand-alone project, replace `-w /workdir/project/nrf/applications/as
         west build -p always -b nrf9160dk_nrf9160_ns'
     ls -la nrf/applications/asset_tracker_v2/build/zephyr/merged.hex
 
-> _Note:_ The `--mr` argument to `west init` specifies the manifest revision, which is the same as the SDK version. It can be a _branch_, _tag_ or a _sha_. It's recommended to select a recent stable version. Which will be tagged. See available [tags in the sdk-nrf repo](https://github.com/nrfconnect/sdk-nrf/tags).
+> ℹ️ The `--mr` argument to `west init` specifies the manifest revision, which is the same as the SDK version. It can be a _branch_, _tag_ or a _sha_. It's recommended to select a recent stable version. Which will be tagged. See available [tags in the sdk-nrf repo](https://github.com/nrfconnect/sdk-nrf/tags).
 
 ### Build a Zephyr sample using the hosted image
 
@@ -130,7 +130,7 @@ This builds the `hci_uart` sample and stores the `hci_uart.hex` file in the curr
 
 ## Flashing
 
-> _:Note:_ Docker for Mac OS and Windows does not have support for USB yet, so this will only work on Linux computers.
+> ℹ️ Docker for Mac OS and Windows does not have support for USB yet, so this will only work on Linux computers.
 
     # assumes asset_tracker_v2 built already (see above)
     docker run --rm -v ${PWD}:/workdir/project \
@@ -155,7 +155,7 @@ The image comes with [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html)
 
 to format your sources.
 
-> _Note:_ Instead of having `clang-format` overwrite the source code file itself, the above command passes the source code file on stdin to clang-format and then overwrites it outside of the container. Otherwise the overwritten file will be owner by the root user (because the Docker daemon is run as root).
+> ℹ️ Instead of having `clang-format` overwrite the source code file itself, the above command passes the source code file on stdin to clang-format and then overwrites it outside of the container. Otherwise the overwritten file will be owner by the root user (because the Docker daemon is run as root).
 
 ## Interactive usage
 
@@ -163,7 +163,7 @@ to format your sources.
     docker run -it --name fw-nrfconnect-nrf-docker -v ${PWD}:/workdir/project \
         fw-nrfconnect-nrf-docker /bin/bash
 
-> _Note:_ On Linux add `--device=/dev/ttyACM0 --privileged` to be able to flash from the Docker container.
+> ℹ️ On Linux add `--device=/dev/ttyACM0 --privileged` to be able to flash from the Docker container.
 
 Then, inside the container:
 
