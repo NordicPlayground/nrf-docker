@@ -56,6 +56,7 @@ RUN mkdir /workdir/project && \
     python3 -m pip install -U setuptools && \
     python3 -m pip install cmake>=3.20.0 wheel && \
     python3 -m pip install -U west==0.12.0 && \
+    python3 -m pip install -U nrfutil && \
     python3 -m pip install pc_ble_driver_py && \
     # Newer PIP will not overwrite distutils, so upgrade PyYAML manually
     python3 -m pip install --ignore-installed -U PyYAML && \
