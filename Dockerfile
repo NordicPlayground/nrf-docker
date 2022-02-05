@@ -85,4 +85,5 @@ ENV XDG_CACHE_HOME=/workdir/.cache
 ENV ZEPHYR_TOOLCHAIN_VARIANT=gnuarmemb
 ENV GNUARMEMB_TOOLCHAIN_PATH=/workdir/gcc-arm-none-eabi-9-2019-q4-major
 ENV ZEPHYR_BASE=/workdir/project/zephyr
+ENV PATH="${GNUARMEMB_TOOLCHAIN_PATH}/bin:${PATH}"
 ENV PATH="${ZEPHYR_BASE}/scripts:${PATH}"
