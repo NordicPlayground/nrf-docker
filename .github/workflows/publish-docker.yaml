@@ -16,6 +16,7 @@ jobs:
       matrix:
         ncs_branch:
           - main
+          - v1.9-branch
           - v1.8-branch
           - v1.7-branch
           - v1.6-branch
@@ -44,7 +45,7 @@ jobs:
 
       - name: Build asset_tracker application
         # Removed in 1.9
-        if: matrix.ncs_branch != 'main'
+        if: matrix.ncs_branch != 'main' && matrix.ncs_branch != 'v1.9-branch'
         run: |
           docker run --rm -v ${PWD}:/workdir/project \
             -w /workdir/project/nrf/applications/asset_tracker \

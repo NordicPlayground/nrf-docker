@@ -1,7 +1,7 @@
 # Building nRF Connect SDK applications with Docker
 
 ![Publish Docker](https://github.com/coderbyheart/fw-nrfconnect-nrf-docker/workflows/Publish%20Docker/badge.svg?branch=saga)
-(_the [Docker image](https://hub.docker.com/r/coderbyheart/fw-nrfconnect-nrf-docker) is build against [nRF Connect SDK](https://github.com/nrfconnect/sdk-nrf) `main`,`v1.8-branch`, `v1.7-branch`, `v1.6-branch`, `v1.5-branch`, and `v1.4-branch` every night._)
+(_the [Docker image](https://hub.docker.com/r/coderbyheart/fw-nrfconnect-nrf-docker) is build against [nRF Connect SDK](https://github.com/nrfconnect/sdk-nrf) `main`,`v1.9-branch`,`v1.8-branch`, `v1.7-branch`, `v1.6-branch`, `v1.5-branch`, and `v1.4-branch` every night._)
 
 This project defines a Docker image that contains all dependencies to run `west` commands with the nRF Connect SDK. Bind mount the project folder you'd like to build, and the output will end up in the same folder (nested in build/zephyr subdir of the app).
 
@@ -26,7 +26,7 @@ Clone the repo:
 Build the image (this is only needed once):
 
     cd fw-nrfconnect-nrf-docker
-    docker build -t fw-nrfconnect-nrf-docker --build-arg sdk_nrf_revision=v1.8-branch .
+    docker build -t fw-nrfconnect-nrf-docker --build-arg sdk_nrf_revision=v1.9-branch .
 
 > 🍏 _Note:_ To build for a Mac with the M1 architecture, you need to specify the `arm64` architecture when building: `--build-arg arch=arm64`.
 
@@ -105,13 +105,13 @@ To build a stand-alone project, replace `-w /workdir/project/nrf/applications/as
     # build docker image
     git clone https://github.com/coderbyheart/fw-nrfconnect-nrf-docker
     cd fw-nrfconnect-nrf-docker
-    docker build -t fw-nrfconnect-nrf-docker --build-arg sdk_nrf_revision=v1.8-branch .
+    docker build -t fw-nrfconnect-nrf-docker --build-arg sdk_nrf_revision=v1.9-branch .
     cd ..
 
     # initialize sdk-nrf and build asset_tracker_v2 application
     mkdir nrfconnect && cd nrfconnect
     docker run --rm -v ${PWD}:/workdir/project fw-nrfconnect-nrf-docker /bin/bash -c '\
-        west init -m https://github.com/nrfconnect/sdk-nrf --mr v1.8-branch && \
+        west init -m https://github.com/nrfconnect/sdk-nrf --mr v1.9-branch && \
         west update --narrow -o=--depth=1 && \
         cd nrf/applications/asset_tracker_v2 && \
         west build -p always -b nrf9160dk_nrf9160_ns'
