@@ -1,13 +1,13 @@
 # Building nRF Connect SDK applications with Docker
 
-![Publish Docker](https://github.com/coderbyheart/fw-nrfconnect-nrf-docker/workflows/Publish%20Docker/badge.svg?branch=saga)
-(_the [Docker image](https://hub.docker.com/r/coderbyheart/fw-nrfconnect-nrf-docker) is build against [nRF Connect SDK](https://github.com/nrfconnect/sdk-nrf) `main`,`v1.9-branch`,`v1.8-branch`, `v1.7-branch`, `v1.6-branch`, `v1.5-branch`, and `v1.4-branch` every night._)
+![Publish Docker](https://github.com/NordicPlayground/asset-tracker-docker/workflows/Publish%20Docker/badge.svg?branch=saga)
+(_the [Docker image](https://hub.docker.com/r/nrfassettracker/nrfconnect-sdk) is build against [nRF Connect SDK](https://github.com/nrfconnect/sdk-nrf) `main`,`v1.9-branch`,`v1.8-branch`, `v1.7-branch`, `v1.6-branch`, `v1.5-branch`, and `v1.4-branch` every night._)
 
 This project defines a Docker image that contains all dependencies to run `west` commands with the nRF Connect SDK. Bind mount the project folder you'd like to build, and the output will end up in the same folder (nested in build/zephyr subdir of the app).
 
 > ℹ️ Read more about this aproach [here](https://devzone.nordicsemi.com/nordic/nrf-connect-sdk-guides/b/getting-started/posts/build-ncs-application-firmware-images-using-docker).
 
-> ⚠️ The `latest` Docker image tag has been deleted. Use `coderbyheart/fw-nrfconnect-nrf-docker:main`.
+> ⚠️ The `latest` Docker image tag has been deleted. Use `nrfassettracker/nrfconnect-sdk:main`.
 
 ![Docker + Zephyr -> merged.hex](./diagram.png)
 
@@ -21,12 +21,12 @@ You can either build the image from this repository or use a pre-built one from 
 
 Clone the repo:
 
-    git clone https://github.com/coderbyheart/fw-nrfconnect-nrf-docker
+    git clone https://github.com/NordicPlayground/asset-tracker-docker
 
 Build the image (this is only needed once):
 
-    cd fw-nrfconnect-nrf-docker
-    docker build -t fw-nrfconnect-nrf-docker --build-arg sdk_nrf_revision=v1.9-branch .
+    cd nrfconnect-sdk
+    docker build -t nrfconnect-sdk --build-arg sdk_nrf_revision=v1.9-branch .
 
 > 🍏 _Note:_ To build for a Mac with the M1 architecture, you need to specify the `arm64` architecture when building: `--build-arg arch=arm64`.
 
@@ -38,11 +38,11 @@ Build the image (this is only needed once):
 
 > 🍏 _Note:_ The prebuilt images are not available for `arm64` architecture (Apple M1), because GitHub Actions don't have hosted runners with Apple M1 yet.
 
-To use the pre-built image [`coderbyheart/fw-nrfconnect-nrf-docker:main`](https://hub.docker.com/r/coderbyheart/fw-nrfconnect-nrf-docker); add `coderbyheart/` before the image name and `:tag` after. Replace `tag` with one of the [available tags](https://hub.docker.com/r/coderbyheart/fw-nrfconnect-nrf-docker/tags) on the Dockerhub image. The only difference between the tags are which Python dependencies are pre-installed in the image based on the different `requirements.txt` files from the nRF Connect SDK repository's west dependencies.
+To use the pre-built image [`nrfassettracker/nrfconnect-sdk:main`](https://hub.docker.com/r/nrfassettracker/nrfconnect-sdk); add `nrfassettracker/` before the image name and `:tag` after. Replace `tag` with one of the [available tags](https://hub.docker.com/r/nrfassettracker/nrfconnect-sdk/tags) on the Dockerhub image. The only difference between the tags are which Python dependencies are pre-installed in the image based on the different `requirements.txt` files from the nRF Connect SDK repository's west dependencies.
 
-    docker run --rm -v ${PWD}:/workdir/project coderbyheart/fw-nrfconnect-nrf-docker:main ...
+    docker run --rm -v ${PWD}:/workdir/project nrfassettracker/nrfconnect-sdk:main ...
 
-The rest of the documentation will use the local name `fw-nrfconnect-nrf-docker`, but any of them can use `coderbyheart/fw-nrfconnect-nrf-docker:main` (or a different tag) instead.
+The rest of the documentation will use the local name `nrfconnect-sdk`, but any of them can use `nrfassettracker/nrfconnect-sdk:main` (or a different tag) instead.
 
 ### Initialize and update west dependencies
 
@@ -51,7 +51,7 @@ Setting up the nRF Connect SDK to build sample applications and a stand-alone re
 #### Using the nRF Connect SDK
 
     mkdir nrfconnect && cd nrfconnect
-    docker run --rm -v ${PWD}:/workdir/project fw-nrfconnect-nrf-docker /bin/bash -c '\
+    docker run --rm -v ${PWD}:/workdir/project nrfconnect-sdk /bin/bash -c '\
         west init -m https://github.com/nrfconnect/sdk-nrf && \
         west update --narrow -o=--depth=1'
 
@@ -74,7 +74,7 @@ Now we can initialize the image for use with our out-of-tree firmware folder:
 
     mkdir build-with-nrf-connect-sdk && cd build-with-nrf-connect-sdk
     git clone https://github.com/my-org/my-application
-    docker run --rm -v ${PWD}:/workdir/project fw-nrfconnect-nrf-docker /bin/bash -c '\
+    docker run --rm -v ${PWD}:/workdir/project nrfconnect-sdk /bin/bash -c '\
         cd my-application && \
         west init -l && \
         west update --narrow -o=--depth=1'
@@ -85,7 +85,7 @@ To demonstrate, we'll build the _asset_tracker_v2_ application from sdk-nrf:
 
     docker run --rm -v ${PWD}:/workdir/project \
         -w /workdir/project/nrf/applications/asset_tracker_v2 \
-        fw-nrfconnect-nrf-docker \
+        nrfconnect-sdk \
         west build -p always -b nrf9160dk_nrf9160_ns
 
 The firmware file will be located here: `nrf/applications/asset_tracker_v2/build/zephyr/merged.hex`. Because it's inside the folder that is bind mounted when running the image, it is also available outside of the Docker image.
@@ -97,20 +97,20 @@ To build a stand-alone project, replace `-w /workdir/project/nrf/applications/as
     # run from the build-with-nrf-connect-sdk
     docker run --rm -v ${PWD}:/workdir/project \
         -w /workdir/project/my-application \
-        fw-nrfconnect-nrf-docker \
+        nrfconnect-sdk \
         west build -p always -b nrf9160dk_nrf9160_ns
 
 ## Full example
 
     # build docker image
-    git clone https://github.com/coderbyheart/fw-nrfconnect-nrf-docker
-    cd fw-nrfconnect-nrf-docker
-    docker build -t fw-nrfconnect-nrf-docker --build-arg sdk_nrf_revision=v1.9-branch .
+    git clone https://github.com/NordicPlayground/asset-tracker-docker
+    cd nrfconnect-sdk
+    docker build -t nrfconnect-sdk --build-arg sdk_nrf_revision=v1.9-branch .
     cd ..
 
     # initialize sdk-nrf and build asset_tracker_v2 application
     mkdir nrfconnect && cd nrfconnect
-    docker run --rm -v ${PWD}:/workdir/project fw-nrfconnect-nrf-docker /bin/bash -c '\
+    docker run --rm -v ${PWD}:/workdir/project nrfconnect-sdk /bin/bash -c '\
         west init -m https://github.com/nrfconnect/sdk-nrf --mr v1.9-branch && \
         west update --narrow -o=--depth=1 && \
         cd nrf/applications/asset_tracker_v2 && \
@@ -124,7 +124,7 @@ To build a stand-alone project, replace `-w /workdir/project/nrf/applications/as
 This builds the `hci_uart` sample and stores the `hci_uart.hex` file in the current directory:
 
     # assumes `west init` and `west update` from before
-    docker run --rm -v ${PWD}:/workdir/project coderbyheart/fw-nrfconnect-nrf-docker:main \
+    docker run --rm -v ${PWD}:/workdir/project nrfassettracker/nrfconnect-sdk:main \
         west build zephyr/samples/bluetooth/hci_uart -p always -b nrf9160dk_nrf52840
     ls -la build/zephyr && cp build/zephyr/zephyr.hex ./hci_uart.hex
 
@@ -135,23 +135,23 @@ This builds the `hci_uart` sample and stores the `hci_uart.hex` file in the curr
     # assumes asset_tracker_v2 built already (see above)
     docker run --rm -v ${PWD}:/workdir/project \
         -w /workdir/project/nrf/applications/asset_tracker_v2 \
-        fw-nrfconnect-nrf-docker \
+        nrfconnect-sdk \
         --device=/dev/ttyACM0 --privileged \
-        fw-nrfconnect-nrf-docker \
+        nrfconnect-sdk \
         west flash
 
 ## ClangFormat
 
 The image comes with [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html) and the [nRF Connect SDK formatting rules](https://github.com/nrfconnect/sdk-nrf/blob/main/.clang-format) so you can run for example
 
-    docker run --name fw-nrfconnect-nrf-docker -d coderbyheart/fw-nrfconnect-nrf-docker tail -f /dev/null
+    docker run --name nrfconnect-sdk -d nrfassettracker/nrfconnect-sdk tail -f /dev/null
     find ./src -type f -iname \*.h -o -iname \*.c \
         | xargs -I@ /bin/bash -c "\
             tmpfile=\$(mktemp /tmp/clang-formatted.XXXXXX) && \
-            docker exec -i fw-nrfconnect-nrf-docker clang-format < @ > \$tmpfile && \
+            docker exec -i nrfconnect-sdk clang-format < @ > \$tmpfile && \
             cmp --silent @ \$tmpfile || (mv \$tmpfile @ && echo @ formatted.)"
-    docker kill fw-nrfconnect-nrf-docker
-    docker rm fw-nrfconnect-nrf-docker
+    docker kill nrfconnect-sdk
+    docker rm nrfconnect-sdk
 
 to format your sources.
 
@@ -160,8 +160,8 @@ to format your sources.
 ## Interactive usage
 
     # from a folder you've initialized with west already
-    docker run -it --name fw-nrfconnect-nrf-docker -v ${PWD}:/workdir/project \
-        fw-nrfconnect-nrf-docker /bin/bash
+    docker run -it --name nrfconnect-sdk -v ${PWD}:/workdir/project \
+        nrfconnect-sdk /bin/bash
 
 > ℹ️ On Linux add `--device=/dev/ttyACM0 --privileged` to be able to flash from the Docker container.
 
@@ -177,4 +177,4 @@ Meanwhile, inside or outside of the container, you may modify the code and repea
 
 Later after closing the container you may re-open it by name to continue where you left off:
 
-    docker start -i fw-nrfconnect-nrf-docker
+    docker start -i nrfconnect-sdk
