@@ -76,6 +76,6 @@ jobs:
       - name: Publish image
         run: |
           cd nrf
-          docker login -u nrfassettracker -p ${{ secrets.DOCKER_PASSWORD }}
+          echo ${{ secrets.DOCKER_PASSWORD }} | docker login --username nrfassettracker --password-stdin
           docker images
           docker push nrfassettracker/nrfconnect-sdk:${{ matrix.ncs_branch }}
