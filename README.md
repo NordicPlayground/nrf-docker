@@ -35,6 +35,8 @@ Build the image (this is only needed once):
 ### Use pre-built image from Dockerhub
 
 > ℹ️ This is a convenient way to quickly build your firmware but using images from untrusted third-parties poses the risk of exposing your source code.
+> There is no guarantee (e.g. cryptographic signature) about what this image contains. When publishing the image this project only ensures through automation that it can be used to build nRF Connect SDK examples. The entire image creatian and publication is automated (build on GitHub Actions, and served by Dockerhub), which means there are multiple systems that can be compromised, during and after publication. No human is involved in verifying the image. In addition Docker images are not deterministic. At build time, dependencies are fetched from third-party sources and installed. These dependencies could also contain malicious code.
+> If you are using this image you must be aware that you are using software from many untrusted sources with all the consequences that brings.
 
 > 🍏 _Note:_ The prebuilt images are not available for `arm64` architecture (Apple M1), because GitHub Actions don't have hosted runners with Apple M1 yet.
 
