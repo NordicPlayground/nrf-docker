@@ -25,19 +25,19 @@ jobs:
 
       - name: Build image
         run: |
-          docker build -t nrfassettracker/nrfconnect-sdk:${{ matrix.ncs_branch }} \
+          docker build -t nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
             --build-arg sdk_nrf_revision=${{ matrix.ncs_branch }} .
 
       - name: Initialize sdk-nrf
         run: |
           docker run --rm -v ${PWD}:/workdir/project \
-            nrfassettracker/nrfconnect-sdk:${{ matrix.ncs_branch }} \
+            nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
               west init -m https://github.com/nrfconnect/sdk-nrf --mr ${{ matrix.ncs_branch }}
 
       - name: Update west dependencies
         run: |
           docker run --rm -v ${PWD}:/workdir/project \
-            nrfassettracker/nrfconnect-sdk:${{ matrix.ncs_branch }} \
+            nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
               west update --narrow -o=--depth=1
 
       - name: Build asset_tracker application
@@ -46,7 +46,7 @@ jobs:
         run: |
           docker run --rm -v ${PWD}:/workdir/project \
             -w /workdir/project/nrf/applications/asset_tracker \
-            nrfassettracker/nrfconnect-sdk:${{ matrix.ncs_branch }} \
+            nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
               west build -b nrf9160dk_nrf9160ns
 
       - uses: actions/upload-artifact@v2
@@ -62,7 +62,7 @@ jobs:
         run: |
           docker run --rm -v ${PWD}:/workdir/project \
             -w /workdir/project/nrf/applications/asset_tracker_v2 \
-            nrfassettracker/nrfconnect-sdk:${{ matrix.ncs_branch }} \
+            nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
               west build -b nrf9160dk_nrf9160ns
 
       - uses: actions/upload-artifact@v2
@@ -76,11 +76,11 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v1
         with:
-          username: nrfassettracker
+          username: nordicplayground
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Publish image
         run: |
           cd nrf
           docker images
-          docker push nrfassettracker/nrfconnect-sdk:${{ matrix.ncs_branch }}
+          docker push nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }}

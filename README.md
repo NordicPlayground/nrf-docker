@@ -1,13 +1,11 @@
 # Building nRF Connect SDK applications with Docker
 
 ![Publish Docker](https://github.com/NordicPlayground/asset-tracker-docker/workflows/Publish%20Docker/badge.svg?branch=saga)
-(_the [Docker image](https://hub.docker.com/r/nrfassettracker/nrfconnect-sdk) is build against [nRF Connect SDK](https://github.com/nrfconnect/sdk-nrf) `main`,`v1.9-branch`,`v1.8-branch`, `v1.7-branch`, `v1.6-branch`, `v1.5-branch`, and `v1.4-branch` every night._)
+(_the [Docker image](https://hub.docker.com/r/nordicplayground/nrfconnect-sdk) is build against [nRF Connect SDK](https://github.com/nrfconnect/sdk-nrf) `main`,`v1.9-branch`,`v1.8-branch`, `v1.7-branch`, `v1.6-branch`, `v1.5-branch`, and `v1.4-branch` every night._)
 
 This project defines a Docker image that contains all dependencies to run `west` commands with the nRF Connect SDK. Bind mount the project folder you'd like to build, and the output will end up in the same folder (nested in build/zephyr subdir of the app).
 
 > ℹ️ Read more about this aproach [here](https://devzone.nordicsemi.com/nordic/nrf-connect-sdk-guides/b/getting-started/posts/build-ncs-application-firmware-images-using-docker).
-
-> ⚠️ The `latest` Docker image tag has been deleted. Use `nrfassettracker/nrfconnect-sdk:main`.
 
 ![Docker + Zephyr -> merged.hex](./diagram.png)
 
@@ -45,11 +43,11 @@ Build the image (this is only needed once):
 
 > 🍏 _Note:_ The prebuilt images are not available for `arm64` architecture (Apple M1), because GitHub Actions don't have hosted runners with Apple M1 yet.
 
-To use the pre-built image [`nrfassettracker/nrfconnect-sdk:main`](https://hub.docker.com/r/nrfassettracker/nrfconnect-sdk); add `nrfassettracker/` before the image name and `:tag` after. Replace `tag` with one of the [available tags](https://hub.docker.com/r/nrfassettracker/nrfconnect-sdk/tags) on the Dockerhub image. The only difference between the tags are which Python dependencies are pre-installed in the image based on the different `requirements.txt` files from the nRF Connect SDK repository's west dependencies.
+To use the pre-built image [`nordicplayground/nrfconnect-sdk:main`](https://hub.docker.com/r/nordicplayground/nrfconnect-sdk); add `nordicplayground/` before the image name and `:tag` after. Replace `tag` with one of the [available tags](https://hub.docker.com/r/nordicplayground/nrfconnect-sdk/tags) on the Dockerhub image. The only difference between the tags are which Python dependencies are pre-installed in the image based on the different `requirements.txt` files from the nRF Connect SDK repository's west dependencies.
 
-    docker run --rm -v ${PWD}:/workdir/project nrfassettracker/nrfconnect-sdk:main ...
+    docker run --rm -v ${PWD}:/workdir/project nordicplayground/nrfconnect-sdk:main ...
 
-The rest of the documentation will use the local name `nrfconnect-sdk`, but any of them can use `nrfassettracker/nrfconnect-sdk:main` (or a different tag) instead.
+The rest of the documentation will use the local name `nrfconnect-sdk`, but any of them can use `nordicplayground/nrfconnect-sdk:main` (or a different tag) instead.
 
 ### Initialize and update west dependencies
 
@@ -131,7 +129,7 @@ To build a stand-alone project, replace `-w /workdir/project/nrf/applications/as
 This builds the `hci_uart` sample and stores the `hci_uart.hex` file in the current directory:
 
     # assumes `west init` and `west update` from before
-    docker run --rm -v ${PWD}:/workdir/project nrfassettracker/nrfconnect-sdk:main \
+    docker run --rm -v ${PWD}:/workdir/project nordicplayground/nrfconnect-sdk:main \
         west build zephyr/samples/bluetooth/hci_uart -p always -b nrf9160dk_nrf52840
     ls -la build/zephyr && cp build/zephyr/zephyr.hex ./hci_uart.hex
 
@@ -151,7 +149,7 @@ This builds the `hci_uart` sample and stores the `hci_uart.hex` file in the curr
 
 The image comes with [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html) and the [nRF Connect SDK formatting rules](https://github.com/nrfconnect/sdk-nrf/blob/main/.clang-format) so you can run for example
 
-    docker run --name nrfconnect-sdk -d nrfassettracker/nrfconnect-sdk tail -f /dev/null
+    docker run --name nrfconnect-sdk -d nordicplayground/nrfconnect-sdk tail -f /dev/null
     find ./src -type f -iname \*.h -o -iname \*.c \
         | xargs -I@ /bin/bash -c "\
             tmpfile=\$(mktemp /tmp/clang-formatted.XXXXXX) && \
