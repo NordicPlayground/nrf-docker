@@ -1,6 +1,6 @@
 # Building nRF Connect SDK applications with Docker
 
-![Publish Docker](https://github.com/NordicPlayground/asset-tracker-docker/workflows/Publish%20Docker/badge.svg?branch=saga)
+![Publish Docker](https://github.com/NordicPlayground/nrf-docker/workflows/Publish%20Docker/badge.svg?branch=saga)
 (_the [Docker image](https://hub.docker.com/r/nordicplayground/nrfconnect-sdk) is build against [nRF Connect SDK](https://github.com/nrfconnect/sdk-nrf) `main`,`v1.9-branch`,`v1.8-branch`, `v1.7-branch`, `v1.6-branch`, `v1.5-branch`, and `v1.4-branch` every night._)
 
 This project defines a Docker image that contains all dependencies to run `west` commands with the nRF Connect SDK. Bind mount the project folder you'd like to build, and the output will end up in the same folder (nested in build/zephyr subdir of the app).
@@ -19,7 +19,7 @@ You can either build the image from this repository or use a pre-built one from 
 
 Clone the repo:
 
-    git clone https://github.com/NordicPlayground/asset-tracker-docker
+    git clone https://github.com/NordicPlayground/nrf-docker
 
 Build the image (this is only needed once):
 
@@ -108,7 +108,7 @@ To build a stand-alone project, replace `-w /workdir/project/nrf/applications/as
 ## Full example
 
     # build docker image
-    git clone https://github.com/NordicPlayground/asset-tracker-docker
+    git clone https://github.com/NordicPlayground/nrf-docker
     cd nrfconnect-sdk
     docker build -t nrfconnect-sdk --build-arg sdk_nrf_revision=v1.9-branch .
     cd ..
