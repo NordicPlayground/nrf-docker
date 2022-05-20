@@ -23,7 +23,7 @@ Clone the repo:
 
 Build the image (this is only needed once):
 
-    cd nrfconnect-sdk
+    cd nrf-docker
     docker build -t nrfconnect-sdk --build-arg sdk_nrf_revision=v1.9-branch .
 
 > 🍏 _Note:_ To build for a Mac with the M1 architecture, you need to specify the `arm64` architecture when building: `--build-arg arch=arm64`.
@@ -109,7 +109,7 @@ To build a stand-alone project, replace `-w /workdir/project/nrf/applications/as
 
     # build docker image
     git clone https://github.com/NordicPlayground/nrf-docker
-    cd nrfconnect-sdk
+    cd nrf-docker
     docker build -t nrfconnect-sdk --build-arg sdk_nrf_revision=v1.9-branch .
     cd ..
 
