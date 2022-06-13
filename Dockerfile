@@ -2,7 +2,6 @@ FROM ubuntu:20.04 as base
 WORKDIR /workdir
 
 ARG arch=amd64
-ARG zephyr_toolchain_release=0.14.2
 
 # System dependencies
 RUN mkdir /workdir/project && \
@@ -68,17 +67,17 @@ RUN mkdir /workdir/project && \
     echo "Target architecture: $arch" && \
     case $arch in \
         "amd64") \
-            ZEPHYR_TOOLCHAIN_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${zephyr_toolchain_release}/zephyr-sdk-${zephyr_toolchain_release}_linux-x86_64.tar.gz" \
+            ZEPHYR_TOOLCHAIN_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.14.2/zephyr-sdk-0.14.2_linux-x86_64.tar.gz" \
             ;; \
         "arm64") \
-            ZEPHYR_TOOLCHAIN_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${zephyr_toolchain_release}/zephyr-sdk-${zephyr_toolchain_release}_linux-aarch64.tar.gz" \
+            ZEPHYR_TOOLCHAIN_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.14.2/zephyr-sdk-0.14.2_linux-aarch64.tar.gz" \
             ;; \
         *) \
             echo "Unsupported target architecture: \"$arch\"" >&2 && \
             exit 1 ;; \
     esac && \
     wget -qO - "${ZEPHYR_TOOLCHAIN_URL}" | tar xz && \
-    cd /workdir/zephyr-sdk-${zephyr_toolchain_release} && yes | ./setup.sh
+    mv /workdir/zephyr-sdk-0.14.2 /workdir/zephyr-sdk && cd /workdir/zephyr-sdk && yes | ./setup.sh
 
 # Download sdk-nrf and west dependencies to install pip requirements
 FROM base
@@ -97,6 +96,6 @@ ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 ENV XDG_CACHE_HOME=/workdir/.cache
 ENV ZEPHYR_TOOLCHAIN_VARIANT=zephyr
-ENV ZEPHYR_SDK_INSTALL_DIR=/workdir/zephyr-sdk-${zephyr_toolchain_release}
+ENV ZEPHYR_SDK_INSTALL_DIR=/workdir/zephyr-sdk
 ENV ZEPHYR_BASE=/workdir/project/zephyr
 ENV PATH="${ZEPHYR_BASE}/scripts:${PATH}"
