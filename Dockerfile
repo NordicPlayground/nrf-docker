@@ -11,6 +11,7 @@ RUN mkdir /workdir/project && \
     apt-get -y install \
         wget \
         python3-pip \
+        python3-venv \
         ninja-build \
         gperf \
         git \
