@@ -30,6 +30,8 @@ RUN mkdir /workdir/project && \
     python3 -m pip install cmake>=3.20.0 wheel && \
     python3 -m pip install -U west==0.12.0 && \
     python3 -m pip install -U nrfutil && \
+    # Downgrade protobuf manually until nrfutil's fix is released: https://github.com/NordicSemiconductor/pc-nrfutil/commit/c03b0dca945f38d8095dc71894b81dfbfd1dca7f
+    python3 -m pip install -U 'protobuf<4.0.0' && \
     python3 -m pip install pc_ble_driver_py && \
     # Newer PIP will not overwrite distutils, so upgrade PyYAML manually
     python3 -m pip install --ignore-installed -U PyYAML && \
