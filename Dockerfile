@@ -48,10 +48,10 @@ RUN mkdir /workdir/project && \
     echo "Target architecture: $arch" && \
     case $arch in \
         "amd64") \
-            NCLT_URL="https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/Versions-10-x-x/10-16-0/nrf-command-line-tools-10.16.0_Linux-amd64.tar.gz" \
+            NCLT_URL="https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/Versions-10-x-x/10-17-0/nrf-command-line-tools-10.17.0_Linux-amd64.tar.gz" \
             ;; \
         "arm64") \
-            NCLT_URL="https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/Versions-10-x-x/10-16-0/nrf-command-line-tools-10.16.0_Linux-arm64.tar.gz" \
+            NCLT_URL="https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/Versions-10-x-x/10-17-0/nrf-command-line-tools-10.17.0_Linux-arm64.tar.gz" \
             ;; \
     esac && \
     # Releases: https://www.nordicsemi.com/Software-and-tools/Development-Tools/nRF-Command-Line-Tools/Download
