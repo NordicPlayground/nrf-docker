@@ -140,7 +140,6 @@ This builds the `hci_uart` sample and stores the `hci_uart.hex` file in the curr
     # assumes asset_tracker_v2 built already (see above)
     docker run --rm -v ${PWD}:/workdir/project \
         -w /workdir/project/nrf/applications/asset_tracker_v2 \
-        nrfconnect-sdk \
         --device=/dev/ttyACM0 --privileged \
         nrfconnect-sdk \
         west flash
