@@ -15,7 +15,6 @@ RUN mkdir /workdir/project && \
         gperf \
         git \
         unzip \
-        python3-setuptools \
         libncurses5 libncurses5-dev \
         libyaml-dev libfdt1 \
         libusb-1.0-0-dev udev \
@@ -93,8 +92,22 @@ RUN \
     mkdir tmp && cd tmp && \
     west init -m https://github.com/nrfconnect/sdk-nrf --mr ${sdk_nrf_revision} && \
     west update --narrow -o=--depth=1 && \
+    echo "Installing requirements: zephyr/scripts/requirements.txt" && \
     python3 -m pip install -r zephyr/scripts/requirements.txt && \
-    python3 -m pip install -r nrf/scripts/requirements.txt && \
+    case $sdk_nrf_revision in \
+        "v1.4-branch") \
+            echo "Installing requirements: nrf/scripts/requirements.txt" && \
+            python3 -m pip install -r nrf/scripts/requirements.txt \
+        ;; \
+        *) \
+            # Install only the requirements needed for building firmware, not documentation
+            echo "Installing requirements: nrf/scripts/requirements-base.txt" && \
+            python3 -m pip install -r nrf/scripts/requirements-base.txt && \
+            echo "Installing requirements: nrf/scripts/requirements-build.txt" && \
+            python3 -m pip install -r nrf/scripts/requirements-build.txt \
+        ;; \
+    esac && \
+    echo "Installing requirements: bootloader/mcuboot/scripts/requirements.txt" && \
     python3 -m pip install -r bootloader/mcuboot/scripts/requirements.txt && \
     cd .. && rm -rf tmp
 
