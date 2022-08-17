@@ -26,7 +26,8 @@ RUN mkdir /workdir/project && \
     # Latest PIP & Python dependencies
     #
     python3 -m pip install -U pip && \
-    python3 -m pip install -U setuptools && \
+    # Pin setuptools to a version that provides use_2to3
+    python3 -m pip install -U "setuptools<58.0.0" && \
     python3 -m pip install cmake>=3.20.0 wheel && \
     python3 -m pip install -U west==0.12.0 && \
     python3 -m pip install -U nrfutil && \
