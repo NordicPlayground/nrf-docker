@@ -15,7 +15,6 @@ RUN mkdir /workdir/project && \
         gperf \
         git \
         unzip \
-        python3-setuptools \
         libncurses5 libncurses5-dev \
         libyaml-dev libfdt1 \
         libusb-1.0-0-dev udev \
