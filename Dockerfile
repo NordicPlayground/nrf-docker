@@ -25,8 +25,7 @@ RUN mkdir /workdir/project && \
     # Latest PIP & Python dependencies
     #
     python3 -m pip install -U pip && \
-    # Pin setuptools to a version that provides use_2to3
-    python3 -m pip install -U "setuptools<58.0.0" && \
+    python3 -m pip install -U setuptools && \
     python3 -m pip install cmake>=3.20.0 wheel && \
     python3 -m pip install -U west==0.12.0 && \
     python3 -m pip install -U nrfutil && \
@@ -93,8 +92,11 @@ RUN \
     mkdir tmp && cd tmp && \
     west init -m https://github.com/nrfconnect/sdk-nrf --mr ${sdk_nrf_revision} && \
     west update --narrow -o=--depth=1 && \
+    echo "Installing requirements: zephyr/scripts/requirements.txt" && \
     python3 -m pip install -r zephyr/scripts/requirements.txt && \
+    echo "Installing requirements: nrf/scripts/requirements.txt" && \
     python3 -m pip install -r nrf/scripts/requirements.txt && \
+    echo "Installing requirements: bootloader/mcuboot/scripts/requirements.txt" && \
     python3 -m pip install -r bootloader/mcuboot/scripts/requirements.txt && \
     cd .. && rm -rf tmp
 
