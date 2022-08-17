@@ -94,10 +94,18 @@ RUN \
     west update --narrow -o=--depth=1 && \
     echo "Installing requirements: zephyr/scripts/requirements.txt" && \
     python3 -m pip install -r zephyr/scripts/requirements.txt && \
-    echo "Installing requirements: nrf/scripts/requirements-base.txt" && \
-    python3 -m pip install -r nrf/scripts/requirements-base.txt && \
-    echo "Installing requirements: nrf/scripts/requirements-build.txt" && \
-    python3 -m pip install -r nrf/scripts/requirements-build.txt && \
+    case $sdk_nrf_revision in \
+        "v1.4-branch") \
+            echo "Installing requirements: nrf/scripts/requirements.txt" && \
+            python3 -m pip install -r nrf/scripts/requirements.txt \
+        ;; \
+        *) \
+            echo "Installing requirements: nrf/scripts/requirements-base.txt" && \
+            python3 -m pip install -r nrf/scripts/requirements-base.txt && \
+            echo "Installing requirements: nrf/scripts/requirements-build.txt" && \
+            python3 -m pip install -r nrf/scripts/requirements-build.txt \
+        ;; \
+    esac && \
     echo "Installing requirements: bootloader/mcuboot/scripts/requirements.txt" && \
     python3 -m pip install -r bootloader/mcuboot/scripts/requirements.txt && \
     cd .. && rm -rf tmp
