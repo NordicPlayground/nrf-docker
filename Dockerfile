@@ -100,6 +100,7 @@ RUN \
             python3 -m pip install -r nrf/scripts/requirements.txt \
         ;; \
         *) \
+            # Install only the requirements needed for building firmware, not documentation
             echo "Installing requirements: nrf/scripts/requirements-base.txt" && \
             python3 -m pip install -r nrf/scripts/requirements-base.txt && \
             echo "Installing requirements: nrf/scripts/requirements-build.txt" && \
