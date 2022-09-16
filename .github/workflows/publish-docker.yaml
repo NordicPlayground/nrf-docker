@@ -12,7 +12,8 @@ jobs:
     strategy:
       matrix:
         ncs_branch:
-          - main
+          # See https://github.com/NordicPlayground/nrf-docker/issues/20
+          # - main
           - v2.1-branch
           - v2.0-branch
           - v1.9-branch
