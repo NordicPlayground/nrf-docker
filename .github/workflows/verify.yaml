@@ -71,6 +71,8 @@ jobs:
             nrf/applications/asset_tracker_v2/build/zephyr/app_update.bin
 
       - name: Ensure nrfutil works
+        # nrfutil does not work on main and v2.1 currently: https://github.com/NordicPlayground/nrf-docker/issues/20
+        if: matrix.ncs_branch != 'main' && matrix.ncs_branch != 'v2.1-branch'
         run: |
           docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} nrfutil
 
