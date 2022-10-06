@@ -133,6 +133,20 @@ This builds the `hci_uart` sample and stores the `hci_uart.hex` file in the curr
         west build zephyr/samples/bluetooth/hci_uart -p always -b nrf9160dk_nrf52840
     ls -la build/zephyr && cp build/zephyr/zephyr.hex ./hci_uart.hex
 
+#### BLE sample example
+
+```bash
+# Init and build in Docker
+docker run --rm -v ${PWD}:/workdir/project nrfconnect-sdk /bin/bash -c '\
+    west init -m https://github.com/nrfconnect/sdk-nrf --mr v2.1-branch && \
+    west update --narrow -o=--depth=1 && \
+    west build zephyr/samples/bluetooth/peripheral_ht -p always -b nrf52840dk_nrf52840'
+
+# Access build files
+cp build/zephyr/zephyr.hex peripheral_ht.hex
+ls -la ./peripheral_ht.hex
+```
+
 ## Flashing
 
 > ℹ️ Docker for Mac OS and Windows does not have support for USB yet, so this will only work on Linux computers.
