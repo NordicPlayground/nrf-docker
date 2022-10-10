@@ -60,7 +60,7 @@ RUN mkdir /workdir/project && \
     # Releases: https://www.nordicsemi.com/Software-and-tools/Development-Tools/nRF-Command-Line-Tools/Download
     if [ ! -z "$NCLT_URL" ]; then \
         mkdir tmp && cd tmp && \
-        wget -qO - "${NCLT_URL}" | tar xz && \
+        wget -qO - "${NCLT_URL}" | tar --no-same-owner -xz && \
         # Install included JLink
         DEBIAN_FRONTEND=noninteractive apt-get -y install ./*.deb && \
         # Install nrf-command-line-tools
