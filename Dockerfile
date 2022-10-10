@@ -37,7 +37,7 @@ RUN mkdir /workdir/project && \
     # Isolated command line tools
     #
     PIPX_HOME=/opt/pipx PIPX_BIN_DIR=/usr/local/bin \
-        pipx install nrfutil && \
+        pipx install 'nrfutil>=6.0.0' && \
     #
     # ClangFormat
     #
