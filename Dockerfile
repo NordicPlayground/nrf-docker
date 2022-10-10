@@ -47,14 +47,15 @@ RUN mkdir /workdir/project && \
     wget -qO- https://raw.githubusercontent.com/nrfconnect/sdk-nrf/main/.clang-format > /workdir/.clang-format && \
     #
     # Nordic command line tools
+    # Releases: https://www.nordicsemi.com/Products/Development-tools/nrf-command-line-tools/download
     #
     echo "Target architecture: $arch" && \
     case $arch in \
         "amd64") \
-            NCLT_URL="https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/Versions-10-x-x/10-17-0/nrf-command-line-tools-10.17.0_Linux-amd64.tar.gz" \
+            NCLT_URL="https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/Versions-10-x-x/10-17-3/nrf-command-line-tools-10.17.3_Linux-amd64.tar.gz" \
             ;; \
         "arm64") \
-            NCLT_URL="https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/Versions-10-x-x/10-17-0/nrf-command-line-tools-10.17.0_Linux-arm64.tar.gz" \
+            NCLT_URL="https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/Versions-10-x-x/10-17-3/nrf-command-line-tools-10.17.3_Linux-arm64.tar.gz" \
             ;; \
     esac && \
     # Releases: https://www.nordicsemi.com/Software-and-tools/Development-Tools/nRF-Command-Line-Tools/Download
@@ -73,14 +74,15 @@ RUN mkdir /workdir/project && \
     fi && \
     #
     # Zephyr Toolchain
+    # Releases: https://github.com/zephyrproject-rtos/sdk-ng/releases
     #
     echo "Target architecture: $arch" && \
     case $arch in \
         "amd64") \
-            ZEPHYR_TOOLCHAIN_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.14.2/zephyr-sdk-0.14.2_linux-x86_64.tar.gz" \
+            ZEPHYR_TOOLCHAIN_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.15.1/zephyr-sdk-0.15.1_linux-x86_64.tar.gz" \
             ;; \
         "arm64") \
-            ZEPHYR_TOOLCHAIN_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.14.2/zephyr-sdk-0.14.2_linux-aarch64.tar.gz" \
+            ZEPHYR_TOOLCHAIN_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.15.1/zephyr-sdk-0.15.1_macos-aarch64.tar.gz" \
             ;; \
         *) \
             echo "Unsupported target architecture: \"$arch\"" >&2 && \
