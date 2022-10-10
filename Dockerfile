@@ -35,9 +35,14 @@ RUN mkdir /workdir/project && \
     python3 -m pip install --ignore-installed -U PyYAML && \
     #
     # Isolated command line tools
+    # No nrfutil 6+ release for arm64 (M1/M2 Macs) and Python 3, yet: https://github.com/NordicSemiconductor/pc-ble-driver-py/issues/227
     #
-    PIPX_HOME=/opt/pipx PIPX_BIN_DIR=/usr/local/bin \
-        pipx install 'nrfutil>=6.0.0' && \
+    case $arch in \
+    "amd64") \
+        PIPX_HOME=/opt/pipx PIPX_BIN_DIR=/usr/local/bin \
+        pipx install 'nrfutil>=6.0.0' \
+        ;; \
+    esac && \
     #
     # ClangFormat
     #
