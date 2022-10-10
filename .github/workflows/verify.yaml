@@ -72,7 +72,7 @@ jobs:
 
       - name: Ensure nrfutil works
         run: |
-          docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} nrfutil -v
+          docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} nrfutil version
 
       - name: Ensure nrfjprog works
         run: |
