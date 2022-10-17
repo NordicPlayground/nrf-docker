@@ -49,7 +49,7 @@ jobs:
           docker run --rm -v ${PWD}:/workdir/project \
             -w /workdir/project/nrf/applications/asset_tracker \
             nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
-              west build -b nrf9160dk_nrf9160ns
+              west build -b nrf9160dk_nrf9160ns -- -DEXTRA_CFLAGS="-Werror"
 
       - uses: actions/upload-artifact@v2
         with:
@@ -65,7 +65,7 @@ jobs:
           docker run --rm -v ${PWD}:/workdir/project \
             -w /workdir/project/nrf/applications/asset_tracker_v2 \
             nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
-              west build -b nrf9160dk_nrf9160ns
+              west build -b nrf9160dk_nrf9160ns -- -DEXTRA_CFLAGS="-Werror"
 
       - uses: actions/upload-artifact@v2
         if: matrix.ncs_branch != 'v1.4-branch' && matrix.ncs_branch != 'v1.5-branch'
