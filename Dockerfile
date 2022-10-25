@@ -2,6 +2,10 @@ FROM ubuntu:20.04 as base
 WORKDIR /workdir
 
 ARG arch=amd64
+ARG ZEPHYR_TOOLCHAIN_VERSION=0.15.1
+ARG WEST_VERSION=0.14.0
+ARG NRF_UTIL_VERSION=6.1.7
+ARG NORDIC_COMMAND_LINE_TOOLS_VERSION="Versions-10-x-x/10-18-1/nrf-command-line-tools_10.18.1"
 
 # System dependencies
 RUN mkdir /workdir/project && \
@@ -29,7 +33,7 @@ RUN mkdir /workdir/project && \
     python3 -m pip install -U pipx && \
     python3 -m pip install -U setuptools && \
     python3 -m pip install 'cmake>=3.20.0' wheel && \
-    python3 -m pip install -U 'west==0.14.0' && \
+    python3 -m pip install -U "west==${WEST_VERSION}" && \
     python3 -m pip install pc_ble_driver_py && \
     # Newer PIP will not overwrite distutils, so upgrade PyYAML manually
     python3 -m pip install --ignore-installed -U PyYAML && \
@@ -40,7 +44,7 @@ RUN mkdir /workdir/project && \
     case $arch in \
     "amd64") \
         PIPX_HOME=/opt/pipx PIPX_BIN_DIR=/usr/local/bin \
-        pipx install 'nrfutil>=6.0.0' \
+        pipx install "nrfutil==${NRF_UTIL_VERSION}" \
         ;; \
     esac && \
     #
@@ -57,12 +61,13 @@ RUN mkdir /workdir/project && \
     echo "Target architecture: $arch" && \
     case $arch in \
         "amd64") \
-            NCLT_URL="https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/Versions-10-x-x/10-17-3/nrf-command-line-tools-10.17.3_Linux-amd64.tar.gz" \
+            NCLT_URL="https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/${NORDIC_COMMAND_LINE_TOOLS_VERSION}_Linux-amd64.tar.gz" \
             ;; \
         "arm64") \
-            NCLT_URL="https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/Versions-10-x-x/10-17-3/nrf-command-line-tools-10.17.3_Linux-arm64.tar.gz" \
+            NCLT_URL="https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/${NORDIC_COMMAND_LINE_TOOLS_VERSION}_Linux-arm64.tar.gz" \
             ;; \
     esac && \
+    echo "NCLT_URL=${NCLT_URL}" && \
     # Releases: https://www.nordicsemi.com/Software-and-tools/Development-Tools/nRF-Command-Line-Tools/Download
     if [ ! -z "$NCLT_URL" ]; then \
         mkdir tmp && cd tmp && \
@@ -82,19 +87,21 @@ RUN mkdir /workdir/project && \
     # Releases: https://github.com/zephyrproject-rtos/sdk-ng/releases
     #
     echo "Target architecture: $arch" && \
+    echo "Zephyr Toolchain version: ${ZEPHYR_TOOLCHAIN_VERSION}" && \
     case $arch in \
         "amd64") \
-            ZEPHYR_TOOLCHAIN_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.15.1/zephyr-sdk-0.15.1_linux-x86_64.tar.gz" \
+            ZEPHYR_TOOLCHAIN_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZEPHYR_TOOLCHAIN_VERSION}/zephyr-sdk-${ZEPHYR_TOOLCHAIN_VERSION}_linux-x86_64.tar.gz" \
             ;; \
         "arm64") \
-            ZEPHYR_TOOLCHAIN_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.15.1/zephyr-sdk-0.15.1_macos-aarch64.tar.gz" \
+            ZEPHYR_TOOLCHAIN_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZEPHYR_TOOLCHAIN_VERSION}/zephyr-sdk-${ZEPHYR_TOOLCHAIN_VERSION}_macos-aarch64.tar.gz" \
             ;; \
         *) \
             echo "Unsupported target architecture: \"$arch\"" >&2 && \
             exit 1 ;; \
     esac && \
+    echo "ZEPHYR_TOOLCHAIN_URL=${ZEPHYR_TOOLCHAIN_URL}" && \
     wget -qO - "${ZEPHYR_TOOLCHAIN_URL}" | tar xz && \
-    mv /workdir/zephyr-sdk-0.15.1 /workdir/zephyr-sdk && cd /workdir/zephyr-sdk && yes | ./setup.sh
+    mv /workdir/zephyr-sdk-${ZEPHYR_TOOLCHAIN_VERSION} /workdir/zephyr-sdk && cd /workdir/zephyr-sdk && yes | ./setup.sh
 
 # Download sdk-nrf and west dependencies to install pip requirements
 FROM base
