@@ -21,6 +21,55 @@ jobs:
           - v1.6-branch
           - v1.5-branch
           - v1.4-branch
+        include:
+          # Defaults
+          - ZEPHYR_TOOLCHAIN_VERSION: 0.15.1
+            EXTRA_CFLAGS: "-Werror"
+            # Removed in v1.9
+            asset_tracker: disable
+            asset_tracker_v2: enable
+
+          # v2.1-branch
+          - ncs_branch: v2.1-branch
+            ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
+
+          # v2.0-branch
+          - ncs_branch: v2.0-branch
+            ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
+
+          # v1.9-branch
+          - ncs_branch: v1.9-branch
+            ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
+
+          # v1.8-branch
+          - ncs_branch: v1.8-branch
+            ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
+            asset_tracker: enable
+
+          # v1.7-branch
+          - ncs_branch: v1.7-branch
+            ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
+            asset_tracker: enable
+
+          # v1.6-branch
+          - ncs_branch: v1.6-branch
+            ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
+            asset_tracker: enable
+
+          # v1.5-branch
+          - ncs_branch: v1.5-branch
+            ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
+            # asset_tracker_v2 needs configuration in 1.5
+            asset_tracker_v2: disable
+            asset_tracker: enable
+
+          # v1.4-branch
+          - ncs_branch: v1.4-branch
+            ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
+            # asset_tracker_v2 is not available in 1.4
+            asset_tracker_v2: disable
+            asset_tracker: enable
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -28,7 +77,10 @@ jobs:
       - name: Build image
         run: |
           docker build -t nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
-            --build-arg sdk_nrf_revision=${{ matrix.ncs_branch }} .
+            --build-arg \
+              sdk_nrf_revision=${{ matrix.ncs_branch }} \
+              ZEPHYR_TOOLCHAIN_VERSION=${{ matrix.ZEPHYR_TOOLCHAIN_VERSION }} \
+            .
 
       - name: Initialize sdk-nrf
         run: |
@@ -43,15 +95,15 @@ jobs:
               west update --narrow -o=--depth=1
 
       - name: Build asset_tracker application
-        # Removed in 1.9
-        if: matrix.ncs_branch != 'main' && matrix.ncs_branch != 'v1.9-branch' && matrix.ncs_branch != 'v2.0-branch' && matrix.ncs_branch != 'v2.1-branch'
+        if: matrix.asset_tracker != 'disable'
         run: |
           docker run --rm -v ${PWD}:/workdir/project \
             -w /workdir/project/nrf/applications/asset_tracker \
             nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
-              west build -b nrf9160dk_nrf9160ns -- -DEXTRA_CFLAGS="-Werror"
+              west build -b nrf9160dk_nrf9160ns
 
       - uses: actions/upload-artifact@v2
+        if: matrix.asset_tracker != 'disable'
         with:
           name: asset_tracker-${{ matrix.ncs_branch }}
           path: |
@@ -59,16 +111,15 @@ jobs:
             nrf/applications/asset_tracker/build/zephyr/app_update.bin
 
       - name: Build asset_tracker_v2 application
-        # Not available in 1.4, and needs configuration in 1.5
-        if: matrix.ncs_branch != 'v1.4-branch' && matrix.ncs_branch != 'v1.5-branch'
+        if: matrix.asset_tracker_v2 != 'disable'
         run: |
           docker run --rm -v ${PWD}:/workdir/project \
             -w /workdir/project/nrf/applications/asset_tracker_v2 \
             nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
-              west build -b nrf9160dk_nrf9160ns -- -DEXTRA_CFLAGS="-Werror"
+              west build -b nrf9160dk_nrf9160ns -- -DEXTRA_CFLAGS="${matrix.EXTRA_CFLAGS}"
 
       - uses: actions/upload-artifact@v2
-        if: matrix.ncs_branch != 'v1.4-branch' && matrix.ncs_branch != 'v1.5-branch'
+        if: matrix.asset_tracker_v2 != 'disable'
         with:
           name: asset_tracker_v2-${{ matrix.ncs_branch }}
           path: |
