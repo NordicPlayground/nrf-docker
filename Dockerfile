@@ -5,7 +5,7 @@ ARG arch=amd64
 ARG ZEPHYR_TOOLCHAIN_VERSION=0.15.1
 ARG WEST_VERSION=0.14.0
 ARG NRF_UTIL_VERSION=6.1.7
-ARG NORDIC_COMMAND_LINE_TOOLS_VERSION="Versions-10-x-x/10-18-0/nrf-command-line-tools-10.18.0"
+ARG NORDIC_COMMAND_LINE_TOOLS_VERSION="Versions-10-x-x/10-17-0/nrf-command-line-tools-10.17.0"
 
 # System dependencies
 RUN mkdir /workdir/project && \
