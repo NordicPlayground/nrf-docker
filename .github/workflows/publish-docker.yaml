@@ -115,7 +115,7 @@ jobs:
           docker run --rm -v ${PWD}:/workdir/project \
             -w /workdir/project/nrf/applications/asset_tracker_v2 \
             nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
-              west build -b nrf9160dk_nrf9160ns -- -DEXTRA_CFLAGS="${matrix.EXTRA_CFLAGS}"
+              west build -b nrf9160dk_nrf9160ns -- -DEXTRA_CFLAGS="${{ matrix.EXTRA_CFLAGS }}"
 
       - uses: actions/upload-artifact@v2
         if: matrix.asset_tracker_v2 != 'disable'
