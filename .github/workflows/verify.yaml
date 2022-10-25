@@ -72,9 +72,8 @@ jobs:
       - name: Build image
         run: |
           docker build -t nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
-            --build-arg \
-              sdk_nrf_revision=${{ matrix.ncs_branch }} \
-              ZEPHYR_TOOLCHAIN_VERSION=${{ matrix.ZEPHYR_TOOLCHAIN_VERSION }} \
+            --build-arg sdk_nrf_revision=${{ matrix.ncs_branch }} \
+            --build-arg ZEPHYR_TOOLCHAIN_VERSION=${{ matrix.ZEPHYR_TOOLCHAIN_VERSION }} \
             .
 
       - name: Initialize sdk-nrf
