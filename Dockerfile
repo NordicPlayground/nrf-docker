@@ -51,8 +51,7 @@ RUN mkdir /workdir/project && \
     # ClangFormat
     #
     python3 -m pip install -U six && \
-    apt-get -y install clang-format-9 && \
-    ln -s /usr/bin/clang-format-9 /usr/bin/clang-format && \
+    apt-get -y install clang-format && \
     wget -qO- https://raw.githubusercontent.com/nrfconnect/sdk-nrf/main/.clang-format > /workdir/.clang-format && \
     #
     # Nordic command line tools
