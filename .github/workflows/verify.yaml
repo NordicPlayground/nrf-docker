@@ -130,3 +130,7 @@ jobs:
       - name: Ensure nrfjprog works
         run: |
           docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} nrfjprog -v
+
+      - name: Ensure clang-format works
+        run: |
+          docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} clang-format --version
