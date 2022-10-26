@@ -5,6 +5,8 @@
 
 This project defines a Docker image that contains all dependencies to run `west` commands with the nRF Connect SDK. Bind mount the project folder you'd like to build, and the output will end up in the same folder (nested in build/zephyr subdir of the app).
 
+The aim is to provide a Docker image that can compile application and samples in a [nRF Connect SDK](https://github.com/nrfconnect/sdk-nrf) release branch, not to exactly replicate the software configuration used when the release was made.
+
 > ℹ️ Read more about this aproach [here](https://devzone.nordicsemi.com/nordic/nrf-connect-sdk-guides/b/getting-started/posts/build-ncs-application-firmware-images-using-docker).
 
 ![Docker + Zephyr -> merged.hex](./diagram.png)
