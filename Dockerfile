@@ -23,7 +23,7 @@ RUN mkdir /workdir/project && \
         libncurses5 libncurses5-dev \
         libyaml-dev libfdt1 \
         libusb-1.0-0-dev udev \
-        device-tree-compiler=1.5.1-1 \
+        device-tree-compiler \
         ruby && \
     apt-get -y clean && apt-get -y autoremove && \
     #
