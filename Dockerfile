@@ -101,7 +101,15 @@ RUN mkdir /workdir/project && \
     esac && \
     echo "ZEPHYR_TOOLCHAIN_URL=${ZEPHYR_TOOLCHAIN_URL}" && \
     wget -qO - "${ZEPHYR_TOOLCHAIN_URL}" | tar xz && \
-    mv /workdir/zephyr-sdk-${ZEPHYR_TOOLCHAIN_VERSION} /workdir/zephyr-sdk && cd /workdir/zephyr-sdk && yes | ./setup.sh
+    mv /workdir/zephyr-sdk-${ZEPHYR_TOOLCHAIN_VERSION} /workdir/zephyr-sdk && cd /workdir/zephyr-sdk && \
+    case $arch in \
+        "arm64") \
+            ./setup.sh -t aarch64-zephyr-elf -c \
+            ;; \
+        *) \
+            yes | ./setup.sh \
+            ;; \
+    esac
 
 # Download sdk-nrf and west dependencies to install pip requirements
 FROM base
