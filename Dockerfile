@@ -24,6 +24,8 @@ RUN mkdir /workdir/project && \
         libyaml-dev libfdt1 \
         libusb-1.0-0-dev udev \
         device-tree-compiler \
+        xz-utils \
+        file \
         ruby && \
     apt-get -y clean && apt-get -y autoremove && \
     #
