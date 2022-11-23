@@ -8,8 +8,7 @@ ARG NRF_UTIL_VERSION=6.1.7
 ARG NORDIC_COMMAND_LINE_TOOLS_VERSION="Versions-10-x-x/10-17-0/nrf-command-line-tools-10.17.0"
 
 # System dependencies
-RUN mkdir /workdir/project && \
-    mkdir /workdir/.cache && \
+RUN mkdir /workdir/.cache && \
     apt-get -y update && \
     apt-get -y upgrade && \
     apt-get -y install \
@@ -116,7 +115,6 @@ RUN mkdir /workdir/project && \
 FROM base
 ARG sdk_nrf_revision=main
 RUN \
-    mkdir tmp && cd tmp && \
     west init -m https://github.com/nrfconnect/sdk-nrf --mr ${sdk_nrf_revision} && \
     west update --narrow -o=--depth=1 && \
     echo "Installing requirements: zephyr/scripts/requirements.txt" && \
@@ -135,14 +133,13 @@ RUN \
         ;; \
     esac && \
     echo "Installing requirements: bootloader/mcuboot/scripts/requirements.txt" && \
-    python3 -m pip install -r bootloader/mcuboot/scripts/requirements.txt && \
-    cd .. && rm -rf tmp
+    python3 -m pip install -r bootloader/mcuboot/scripts/requirements.txt
 
-WORKDIR /workdir/project
+WORKDIR /workdir
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 ENV XDG_CACHE_HOME=/workdir/.cache
 ENV ZEPHYR_TOOLCHAIN_VARIANT=zephyr
 ENV ZEPHYR_SDK_INSTALL_DIR=/workdir/zephyr-sdk
-ENV ZEPHYR_BASE=/workdir/project/zephyr
+ENV ZEPHYR_BASE=/workdir/zephyr
 ENV PATH="${ZEPHYR_BASE}/scripts:${PATH}"

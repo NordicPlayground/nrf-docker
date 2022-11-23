@@ -57,52 +57,13 @@ docker run --rm -v ${PWD}:/workdir/project nordicplayground/nrfconnect-sdk:main 
 
 The rest of the documentation will use the local name `nrfconnect-sdk`, but any of them can use `nordicplayground/nrfconnect-sdk:main` (or a different tag) instead.
 
-### Initialize and update west dependencies
-
-Setting up the nRF Connect SDK to build sample applications and a stand-alone repository is a bit different, so we'll demonstrate both.
-
-#### Using the nRF Connect SDK
-
-```bash
-mkdir nrfconnect && cd nrfconnect
-docker run --rm -v ${PWD}:/workdir/project nrfconnect-sdk /bin/bash -c '\
-    west init -m https://github.com/nrfconnect/sdk-nrf && \
-    west update --narrow -o=--depth=1'
-```
-
-#### Using it with an out-of-tree repository
-
-Because west installs the dependency repository in the parent-folder of the project folder we need to have an extra subfolder where the custom firmware code is located. Then the containing folder can be mounted when running the container and the output from west will be stored alongside the custom firmware folder. Here's an example folder layout for the `my-application`:
-
-    build-with-nrf-connect-sdk
-    ├── bootloader
-    ├── mbedtls
-    ├── modules
-    ├── my-application
-    ├── nrf
-    ├── nrfxlib
-    ├── test
-    ├── tools
-    └── zephyr
-
-Now we can initialize the image for use with our out-of-tree firmware folder:
-
-```bash
-mkdir build-with-nrf-connect-sdk && cd build-with-nrf-connect-sdk
-git clone https://github.com/my-org/my-application
-docker run --rm -v ${PWD}:/workdir/project nrfconnect-sdk /bin/bash -c '\
-    cd my-application && \
-    west init -l && \
-    west update --narrow -o=--depth=1'
-```
-
 ### Build the firmware
 
 To demonstrate, we'll build the _asset_tracker_v2_ application from sdk-nrf:
 
 ```bash
-docker run --rm -v ${PWD}:/workdir/project \
-    -w /workdir/project/nrf/applications/asset_tracker_v2 \
+docker run --rm \
+    -w /workdir/nrf/applications/asset_tracker_v2 \
     nrfconnect-sdk \
     west build -p always -b nrf9160dk_nrf9160_ns
 ```
@@ -111,12 +72,11 @@ The firmware file will be located here: `nrf/applications/asset_tracker_v2/build
 
 > ℹ️ The `-p always` build argument is to do a pristine build. It is similar to cleaning the build folder and is used because it is less error-prone to a previous build with different configuration. To speed up subsequent build with the same configuration you can remove this argument to avoid re-building code that haven't been modified since the previous build.
 
-To build a stand-alone project, replace `-w /workdir/project/nrf/applications/asset_tracker_v2` with the name of the applications folder inside the docker container:
+To build a stand-alone project, replace `-w /workdir/nrf/applications/asset_tracker_v2` with the name of the applications folder inside the docker container:
 
 ```bash
 # run from the build-with-nrf-connect-sdk
 docker run --rm -v ${PWD}:/workdir/project \
-    -w /workdir/project/my-application \
     nrfconnect-sdk \
     west build -p always -b nrf9160dk_nrf9160_ns
 ```
@@ -129,26 +89,14 @@ git clone https://github.com/NordicPlayground/nrf-docker
 cd nrf-docker
 docker build -t nrfconnect-sdk --build-arg sdk_nrf_revision=v2.1-branch .
 cd ..
-
-# initialize sdk-nrf and build asset_tracker_v2 application
-mkdir nrfconnect && cd nrfconnect
-docker run --rm -v ${PWD}:/workdir/project nrfconnect-sdk /bin/bash -c '\
-    west init -m https://github.com/nrfconnect/sdk-nrf --mr v2.1-branch && \
-    west update --narrow -o=--depth=1 && \
-    cd nrf/applications/asset_tracker_v2 && \
-    west build -p always -b nrf9160dk_nrf9160_ns'
-ls -la nrf/applications/asset_tracker_v2/build/zephyr/merged.hex
 ```
-
-> ℹ️ The `--mr` argument to `west init` specifies the manifest revision, which is the same as the SDK version. It can be a _branch_, _tag_ or a _sha_. It's recommended to select a recent stable version. Which will be tagged. See available [tags in the sdk-nrf repo](https://github.com/nrfconnect/sdk-nrf/tags).
 
 ### Build a Zephyr sample using the hosted image
 
 This builds the `hci_uart` sample and stores the `hci_uart.hex` file in the current directory:
 
 ```bash
-# assumes `west init` and `west update` from before
-docker run --rm -v ${PWD}:/workdir/project nordicplayground/nrfconnect-sdk:main \
+docker run --rm nordicplayground/nrfconnect-sdk:main \
     west build zephyr/samples/bluetooth/hci_uart -p always -b nrf9160dk_nrf52840
 ls -la build/zephyr && cp build/zephyr/zephyr.hex ./hci_uart.hex
 ```
@@ -157,10 +105,8 @@ ls -la build/zephyr && cp build/zephyr/zephyr.hex ./hci_uart.hex
 
 ```bash
 # Init and build in Docker
-docker run --rm -v ${PWD}:/workdir/project nrfconnect-sdk /bin/bash -c '\
-    west init -m https://github.com/nrfconnect/sdk-nrf --mr v2.1-branch && \
-    west update --narrow -o=--depth=1 && \
-    west build zephyr/samples/bluetooth/peripheral_ht -p always -b nrf52840dk_nrf52840'
+docker run --rm nordicplayground/nrfconnect-sdk:main \
+  west build zephyr/samples/bluetooth/peripheral_ht -p always -b nrf52840dk_nrf52840
 
 # Access build files
 cp build/zephyr/zephyr.hex peripheral_ht.hex
@@ -173,8 +119,8 @@ ls -la ./peripheral_ht.hex
 
 ```bash
 # assumes asset_tracker_v2 built already (see above)
-docker run --rm -v ${PWD}:/workdir/project \
-    -w /workdir/project/nrf/applications/asset_tracker_v2 \
+docker run --rm \
+    -w /workdir/nrf/applications/asset_tracker_v2 \
     --device=/dev/ttyACM0 --privileged \
     nrfconnect-sdk \
     west flash
@@ -202,7 +148,6 @@ to format your sources.
 ## Interactive usage
 
 ```bash
-# from a folder you've initialized with west already
 docker run -it --name nrfconnect-sdk -v ${PWD}:/workdir/project \
     nrfconnect-sdk /bin/bash
 ```
