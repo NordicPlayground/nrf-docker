@@ -25,7 +25,6 @@ jobs:
           # Defaults
           - ZEPHYR_TOOLCHAIN_VERSION: 0.15.1
             NORDIC_COMMAND_LINE_TOOLS_VERSION: "Versions-10-x-x/10-17-0/nrf-command-line-tools-10.17.0"
-            EXTRA_CFLAGS: "-Werror -Wno-dev"
             # Removed in v1.9
             asset_tracker: disable
             asset_tracker_v2: enable
@@ -87,33 +86,35 @@ jobs:
         if: matrix.asset_tracker != 'disable'
         run: |
           docker run --rm \
+            -v ${PWD}:/workdir/project \
             -w /workdir/nrf/applications/asset_tracker \
             nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
-              west build -b nrf9160dk_nrf9160ns -- -DEXTRA_CFLAGS="${{ matrix.EXTRA_CFLAGS }}"
+              west build -b nrf9160dk_nrf9160ns  --build-dir /workdir/project/build -- -DEXTRA_CFLAGS="-Werror -Wno-dev"
 
       - uses: actions/upload-artifact@v2
         if: matrix.asset_tracker != 'disable'
         with:
           name: asset_tracker-${{ matrix.ncs_branch }}
           path: |
-            nrf/applications/asset_tracker/build/zephyr/merged.hex
-            nrf/applications/asset_tracker/build/zephyr/app_update.bin
+            build/zephyr/merged.hex
+            build/zephyr/app_update.bin
 
       - name: Build asset_tracker_v2 application
         if: matrix.asset_tracker_v2 != 'disable'
         run: |
           docker run --rm \
+            -v ${PWD}:/workdir/project \
             -w /workdir/nrf/applications/asset_tracker_v2 \
             nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
-              west build -b nrf9160dk_nrf9160ns -- -DEXTRA_CFLAGS="${{ matrix.EXTRA_CFLAGS }}"
+              west build -b nrf9160dk_nrf9160ns --build-dir /workdir/project/build -- -DEXTRA_CFLAGS="-Werror -Wno-dev"
 
       - uses: actions/upload-artifact@v2
         if: matrix.asset_tracker_v2 != 'disable'
         with:
           name: asset_tracker_v2-${{ matrix.ncs_branch }}
           path: |
-            nrf/applications/asset_tracker_v2/build/zephyr/merged.hex
-            nrf/applications/asset_tracker_v2/build/zephyr/app_update.bin
+            build/zephyr/merged.hex
+            build/zephyr/app_update.bin
 
       - name: Ensure nrfutil works
         run: |
@@ -135,6 +136,5 @@ jobs:
 
       - name: Publish image
         run: |
-          cd nrf
           docker images
           docker push nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }}

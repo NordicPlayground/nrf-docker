@@ -135,6 +135,8 @@ RUN \
     echo "Installing requirements: bootloader/mcuboot/scripts/requirements.txt" && \
     python3 -m pip install -r bootloader/mcuboot/scripts/requirements.txt
 
+RUN mkdir /workdir/project
+
 WORKDIR /workdir
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8

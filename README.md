@@ -63,9 +63,10 @@ To demonstrate, we'll build the _asset_tracker_v2_ application from sdk-nrf:
 
 ```bash
 docker run --rm \
+    -v ${PWD}:/workdir/project \
     -w /workdir/nrf/applications/asset_tracker_v2 \
     nrfconnect-sdk \
-    west build -p always -b nrf9160dk_nrf9160_ns
+    west build -p always -b nrf9160dk_nrf9160_ns --build-dir /workdir/project/build
 ```
 
 The firmware file will be located here: `nrf/applications/asset_tracker_v2/build/zephyr/merged.hex`. Because it's inside the folder that is bind mounted when running the image, it is also available outside of the Docker image.
@@ -97,7 +98,8 @@ This builds the `hci_uart` sample and stores the `hci_uart.hex` file in the curr
 
 ```bash
 docker run --rm nordicplayground/nrfconnect-sdk:main \
-    west build zephyr/samples/bluetooth/hci_uart -p always -b nrf9160dk_nrf52840
+    -v ${PWD}:/workdir/project \
+    west build zephyr/samples/bluetooth/hci_uart -p always -b nrf9160dk_nrf52840 --build-dir /workdir/project/build
 ls -la build/zephyr && cp build/zephyr/zephyr.hex ./hci_uart.hex
 ```
 
@@ -106,7 +108,8 @@ ls -la build/zephyr && cp build/zephyr/zephyr.hex ./hci_uart.hex
 ```bash
 # Init and build in Docker
 docker run --rm nordicplayground/nrfconnect-sdk:main \
-  west build zephyr/samples/bluetooth/peripheral_ht -p always -b nrf52840dk_nrf52840
+  -v ${PWD}:/workdir/project \
+  west build zephyr/samples/bluetooth/peripheral_ht -p always -b nrf52840dk_nrf52840 --build-dir /workdir/project/build
 
 # Access build files
 cp build/zephyr/zephyr.hex peripheral_ht.hex
