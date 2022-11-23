@@ -79,23 +79,11 @@ jobs:
             --build-arg NORDIC_COMMAND_LINE_TOOLS_VERSION=${{ matrix.NORDIC_COMMAND_LINE_TOOLS_VERSION }} \
             .
 
-      - name: Initialize sdk-nrf
-        run: |
-          docker run --rm -v ${PWD}:/workdir/project \
-            nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
-              west init -m https://github.com/nrfconnect/sdk-nrf --mr ${{ matrix.ncs_branch }}
-
-      - name: Update west dependencies
-        run: |
-          docker run --rm -v ${PWD}:/workdir/project \
-            nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
-              west update --narrow -o=--depth=1
-
       - name: Build asset_tracker application
         if: matrix.asset_tracker != 'disable'
         run: |
-          docker run --rm -v ${PWD}:/workdir/project \
-            -w /workdir/project/nrf/applications/asset_tracker \
+          docker run --rm \
+            -w /workdir/nrf/applications/asset_tracker \
             nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
               west build -b nrf9160dk_nrf9160ns
 
@@ -110,8 +98,8 @@ jobs:
       - name: Build asset_tracker_v2 application
         if: matrix.asset_tracker_v2 != 'disable'
         run: |
-          docker run --rm -v ${PWD}:/workdir/project \
-            -w /workdir/project/nrf/applications/asset_tracker_v2 \
+          docker run --rm \
+            -w /workdir/nrf/applications/asset_tracker_v2 \
             nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
               west build -b nrf9160dk_nrf9160ns -- -DEXTRA_CFLAGS="${{ matrix.EXTRA_CFLAGS }}"
 
