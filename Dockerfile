@@ -137,7 +137,7 @@ RUN \
 
 RUN mkdir /workdir/project
 
-WORKDIR /workdir
+WORKDIR /workdir/project
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 ENV XDG_CACHE_HOME=/workdir/.cache
