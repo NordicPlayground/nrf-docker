@@ -91,9 +91,10 @@ jobs:
             nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
               west build -b nrf9160dk_nrf9160ns  --build-dir /workdir/project/build -- -DEXTRA_CFLAGS="-Werror -Wno-dev"
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: matrix.asset_tracker != 'disable'
         with:
+          if-no-files-found: error
           name: asset_tracker-${{ matrix.ncs_branch }}
           path: |
             build/zephyr/merged.hex
@@ -108,9 +109,10 @@ jobs:
             nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
               west build -b nrf9160dk_nrf9160ns --build-dir /workdir/project/build -- -DEXTRA_CFLAGS="-Werror -Wno-dev"
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: matrix.asset_tracker_v2 != 'disable'
         with:
+          if-no-files-found: error
           name: asset_tracker_v2-${{ matrix.ncs_branch }}
           path: |
             build/zephyr/merged.hex
