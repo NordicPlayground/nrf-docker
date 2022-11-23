@@ -11,7 +11,7 @@ The aim is to provide a Docker image that can compile application and samples in
 
 ![Docker + Zephyr -> merged.hex](./diagram.png)
 
-Install `docker` on your operating system. On Windows you might want to use the [WSL subsystem](https://docs.docker.com/docker-for-wi/workdir/project/ndows/wsl-tech-preview/).
+Install `docker` on your operating system. On Windows you might want to use the [WSL subsystem](https://docs.docker.com/docker-for-windows/wsl-tech-preview/).
 
 ## Setup
 
