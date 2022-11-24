@@ -115,7 +115,6 @@ RUN mkdir /workdir/.cache && \
     #
     # Install Python 3.8 for older toolchain versions
     #
-    echo "${ZEPHYR_TOOLCHAIN_VERSION}" && \
     if [ $(expr match "$ZEPHYR_TOOLCHAIN_VERSION" "0\.14\.*") -ne 0 ]; then \
         apt-get -y install software-properties-common && \
         add-apt-repository -y ppa:deadsnakes/ppa && \
