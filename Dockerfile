@@ -7,6 +7,8 @@ ARG WEST_VERSION=0.14.0
 ARG NRF_UTIL_VERSION=6.1.7
 ARG NORDIC_COMMAND_LINE_TOOLS_VERSION="Versions-10-x-x/10-17-0/nrf-command-line-tools-10.17.0"
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 # System dependencies
 RUN mkdir /workdir/.cache && \
     apt-get -y update && \
@@ -109,7 +111,17 @@ RUN mkdir /workdir/.cache && \
         *) \
             yes | ./setup.sh \
             ;; \
-    esac
+    esac && \
+    #
+    # Install Python 3.8 for older toolchain versions
+    #
+    if [[ "${ZEPHYR_TOOLCHAIN_VERSION}" == 0.14.* ]]; then \
+        apt-get -y install software-properties-common && \
+        add-apt-repository -y ppa:deadsnakes/ppa && \
+        apt-get -y update && \
+        apt-get -y install python3.8 python3.8-dev && \
+        python3.8 --version; \
+    fi
 
 # Download sdk-nrf and west dependencies to install pip requirements
 FROM base
