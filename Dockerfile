@@ -5,7 +5,7 @@ ARG arch=amd64
 ARG ZEPHYR_TOOLCHAIN_VERSION=0.15.1
 ARG WEST_VERSION=0.14.0
 ARG NRF_UTIL_VERSION=6.1.7
-ARG NORDIC_COMMAND_LINE_TOOLS_VERSION="Versions-10-x-x/10-17-0/nrf-command-line-tools-10.17.0"
+ARG NORDIC_COMMAND_LINE_TOOLS_VERSION="10-18-1/nrf-command-line-tools-10.18.1"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -60,13 +60,14 @@ RUN mkdir /workdir/.cache && \
     # Nordic command line tools
     # Releases: https://www.nordicsemi.com/Products/Development-tools/nrf-command-line-tools/download
     #
+    NCLT_BASE=https://nsscprodmedia.blob.core.windows.net/prod/software-and-other-downloads/desktop-software/nrf-command-line-tools/sw/versions-10-x-x && \
     echo "Target architecture: $arch" && \
     case $arch in \
         "amd64") \
-            NCLT_URL="https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/${NORDIC_COMMAND_LINE_TOOLS_VERSION}_Linux-amd64.tar.gz" \
+            NCLT_URL="${NCLT_BASE}/${NORDIC_COMMAND_LINE_TOOLS_VERSION}_linux-amd64.tar.gz" \
             ;; \
         "arm64") \
-            NCLT_URL="https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/${NORDIC_COMMAND_LINE_TOOLS_VERSION}_Linux-arm64.tar.gz" \
+            NCLT_URL="${NCLT_BASE}/${NORDIC_COMMAND_LINE_TOOLS_VERSION}_linux-arm64.tar.gz" \
             ;; \
     esac && \
     echo "NCLT_URL=${NCLT_URL}" && \
