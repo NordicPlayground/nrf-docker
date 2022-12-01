@@ -64,10 +64,10 @@ RUN mkdir /workdir/.cache && \
     echo "Target architecture: $arch" && \
     case $arch in \
         "amd64") \
-            NCLT_URL="${NCLT_BASE}/${NORDIC_COMMAND_LINE_TOOLS_VERSION}_Linux-amd64.tar.gz" \
+            NCLT_URL="${NCLT_BASE}/${NORDIC_COMMAND_LINE_TOOLS_VERSION}_linux-amd64.tar.gz" \
             ;; \
         "arm64") \
-            NCLT_URL="${NCLT_BASE}/${NORDIC_COMMAND_LINE_TOOLS_VERSION}_Linux-arm64.tar.gz" \
+            NCLT_URL="${NCLT_BASE}/${NORDIC_COMMAND_LINE_TOOLS_VERSION}_linux-arm64.tar.gz" \
             ;; \
     esac && \
     echo "NCLT_URL=${NCLT_URL}" && \
