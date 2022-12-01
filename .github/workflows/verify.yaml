@@ -19,7 +19,7 @@ jobs:
         include:
           # Defaults
           - ZEPHYR_TOOLCHAIN_VERSION: 0.15.1
-            NORDIC_COMMAND_LINE_TOOLS_VERSION: "10-18-1/nrf-command-line-tools_10.18.1"
+            NORDIC_COMMAND_LINE_TOOLS_VERSION: "10-18-1/nrf-command-line-tools-10.18.1"
             # Removed in v1.9
             asset_tracker: disable
             asset_tracker_v2: enable
