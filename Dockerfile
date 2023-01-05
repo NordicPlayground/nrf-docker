@@ -2,6 +2,7 @@ FROM ubuntu:22.04 as base
 WORKDIR /workdir
 
 ARG arch=amd64
+ARG crossarch=arm-zephyr-eabi
 ARG ZEPHYR_TOOLCHAIN_VERSION=0.15.2
 ARG WEST_VERSION=0.14.0
 ARG NRF_UTIL_VERSION=6.1.7
@@ -61,7 +62,7 @@ RUN mkdir /workdir/.cache && \
     # Releases: https://www.nordicsemi.com/Products/Development-tools/nrf-command-line-tools/download
     #
     NCLT_BASE=https://nsscprodmedia.blob.core.windows.net/prod/software-and-other-downloads/desktop-software/nrf-command-line-tools/sw/versions-10-x-x && \
-    echo "Target architecture: $arch" && \
+    echo "Host architecture: $arch" && \
     case $arch in \
         "amd64") \
             NCLT_URL="${NCLT_BASE}/${NORDIC_COMMAND_LINE_TOOLS_VERSION}_linux-amd64.tar.gz" \
@@ -89,28 +90,29 @@ RUN mkdir /workdir/.cache && \
     # Zephyr Toolchain
     # Releases: https://github.com/zephyrproject-rtos/sdk-ng/releases
     #
-    echo "Target architecture: $arch" && \
+    echo "Host architecture: ${arch}" && \
+    echo "Target architecture: ${crossarch}" && \
     echo "Zephyr Toolchain version: ${ZEPHYR_TOOLCHAIN_VERSION}" && \
     case $arch in \
         "amd64") \
-            ZEPHYR_TOOLCHAIN_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZEPHYR_TOOLCHAIN_VERSION}/zephyr-sdk-${ZEPHYR_TOOLCHAIN_VERSION}_linux-x86_64.tar.gz" \
+            ZEPHYR_MINIMAL_BUNDLE_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZEPHYR_TOOLCHAIN_VERSION}/zephyr-sdk-${ZEPHYR_TOOLCHAIN_VERSION}_linux-x86_64_minimal.tar.gz" \
             ;; \
         "arm64") \
-            ZEPHYR_TOOLCHAIN_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZEPHYR_TOOLCHAIN_VERSION}/zephyr-sdk-${ZEPHYR_TOOLCHAIN_VERSION}_macos-aarch64.tar.gz" \
+            ZEPHYR_MINIMAL_BUNDLE_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZEPHYR_TOOLCHAIN_VERSION}/zephyr-sdk-${ZEPHYR_TOOLCHAIN_VERSION}_macos-aarch64_minimal.tar.gz" \
             ;; \
         *) \
-            echo "Unsupported target architecture: \"$arch\"" >&2 && \
+            echo "Unsupported host architecture: \"${arch}\"" >&2 && \
             exit 1 ;; \
     esac && \
-    echo "ZEPHYR_TOOLCHAIN_URL=${ZEPHYR_TOOLCHAIN_URL}" && \
-    wget -qO - "${ZEPHYR_TOOLCHAIN_URL}" | tar xz && \
+    echo "Install Zephyr SDK from ZEPHYR_MINIMAL_BUNDLE_URL=${ZEPHYR_MINIMAL_BUNDLE_URL}" && \
+    wget -qO - "${ZEPHYR_MINIMAL_BUNDLE_URL}" | tar xz && \
     mv /workdir/zephyr-sdk-${ZEPHYR_TOOLCHAIN_VERSION} /workdir/zephyr-sdk && cd /workdir/zephyr-sdk && \
     case $arch in \
         "arm64") \
             ./setup.sh -t aarch64-zephyr-elf -c \
             ;; \
         *) \
-            yes | ./setup.sh \
+            yes | ./setup.sh -t ${crossarch} \
             ;; \
     esac && \
     #
