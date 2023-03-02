@@ -13,6 +13,7 @@ jobs:
       matrix:
         ncs_branch:
           - main
+          - v2.3-branch
           - v2.2-branch
           - v2.1-branch
           - v2.0-branch
@@ -30,44 +31,37 @@ jobs:
             asset_tracker: disable
             asset_tracker_v2: enable
 
-          # v2.2-branch
+          - ncs_branch: v2.3-branch
+
           - ncs_branch: v2.2-branch
 
-          # v2.1-branch
           - ncs_branch: v2.1-branch
             ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
 
-          # v2.0-branch
           - ncs_branch: v2.0-branch
             ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
 
-          # v1.9-branch
           - ncs_branch: v1.9-branch
             ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
 
-          # v1.8-branch
           - ncs_branch: v1.8-branch
             ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
             asset_tracker: enable
 
-          # v1.7-branch
           - ncs_branch: v1.7-branch
             ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
             asset_tracker: enable
 
-          # v1.6-branch
           - ncs_branch: v1.6-branch
             ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
             asset_tracker: enable
 
-          # v1.5-branch
           - ncs_branch: v1.5-branch
             ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
             # asset_tracker_v2 needs configuration in 1.5
             asset_tracker_v2: disable
             asset_tracker: enable
 
-          # v1.4-branch
           - ncs_branch: v1.4-branch
             ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
             NORDIC_COMMAND_LINE_TOOLS_VERSION: "10-17-3/nrf-command-line-tools-10.17.3"
