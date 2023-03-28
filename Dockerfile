@@ -28,6 +28,7 @@ RUN mkdir /workdir/.cache && \
         device-tree-compiler \
         xz-utils \
         file \
+        gcc-multilib \
         ruby && \
     apt-get -y clean && apt-get -y autoremove && \
     #
