@@ -2,10 +2,9 @@ name: Publish Docker
 
 on:
   push:
-    branches:
-      - saga
-  schedule:
-    - cron: "0 0 * * *"
+  pull_request:
+  # schedule:
+  #   - cron: "0 0 * * *"
 
 jobs:
   build:
@@ -14,15 +13,15 @@ jobs:
         ncs_branch:
           - main
           - v2.3-branch
-          - v2.2-branch
-          - v2.1-branch
-          - v2.0-branch
-          - v1.9-branch
-          - v1.8-branch
-          - v1.7-branch
-          - v1.6-branch
-          - v1.5-branch
-          - v1.4-branch
+          # - v2.2-branch
+          # - v2.1-branch
+          # - v2.0-branch
+          # - v1.9-branch
+          # - v1.8-branch
+          # - v1.7-branch
+          # - v1.6-branch
+          # - v1.5-branch
+          # - v1.4-branch
         include:
           # Defaults
           - ZEPHYR_TOOLCHAIN_VERSION: 0.15.2
@@ -33,41 +32,41 @@ jobs:
 
           - ncs_branch: v2.3-branch
 
-          - ncs_branch: v2.2-branch
+          # - ncs_branch: v2.2-branch
 
-          - ncs_branch: v2.1-branch
-            ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
+          # - ncs_branch: v2.1-branch
+          #   ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
 
-          - ncs_branch: v2.0-branch
-            ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
+          # - ncs_branch: v2.0-branch
+          #   ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
 
-          - ncs_branch: v1.9-branch
-            ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
+          # - ncs_branch: v1.9-branch
+          #   ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
 
-          - ncs_branch: v1.8-branch
-            ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
-            asset_tracker: enable
+          # - ncs_branch: v1.8-branch
+          #   ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
+          #   asset_tracker: enable
 
-          - ncs_branch: v1.7-branch
-            ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
-            asset_tracker: enable
+          # - ncs_branch: v1.7-branch
+          #   ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
+          #   asset_tracker: enable
 
-          - ncs_branch: v1.6-branch
-            ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
-            asset_tracker: enable
+          # - ncs_branch: v1.6-branch
+          #   ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
+          #   asset_tracker: enable
 
-          - ncs_branch: v1.5-branch
-            ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
-            # asset_tracker_v2 needs configuration in 1.5
-            asset_tracker_v2: disable
-            asset_tracker: enable
+          # - ncs_branch: v1.5-branch
+          #   ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
+          #   # asset_tracker_v2 needs configuration in 1.5
+          #   asset_tracker_v2: disable
+          #   asset_tracker: enable
 
-          - ncs_branch: v1.4-branch
-            ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
-            NORDIC_COMMAND_LINE_TOOLS_VERSION: "10-17-3/nrf-command-line-tools-10.17.3"
-            # asset_tracker_v2 is not available in 1.4
-            asset_tracker_v2: disable
-            asset_tracker: enable
+          # - ncs_branch: v1.4-branch
+          #   ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
+          #   NORDIC_COMMAND_LINE_TOOLS_VERSION: "10-17-3/nrf-command-line-tools-10.17.3"
+          #   # asset_tracker_v2 is not available in 1.4
+          #   asset_tracker_v2: disable
+          #   asset_tracker: enable
 
     runs-on: ubuntu-latest
     steps:
@@ -75,67 +74,71 @@ jobs:
 
       - name: Build image
         run: |
-          docker build -t nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
+          docker build -t crzyrndm/nrfconnect-sdk:${{ matrix.ncs_branch }} \
             --build-arg sdk_nrf_revision=${{ matrix.ncs_branch }} \
             --build-arg ZEPHYR_TOOLCHAIN_VERSION=${{ matrix.ZEPHYR_TOOLCHAIN_VERSION }} \
             --build-arg NORDIC_COMMAND_LINE_TOOLS_VERSION=${{ matrix.NORDIC_COMMAND_LINE_TOOLS_VERSION }} \
             .
 
-      - name: Build asset_tracker application
-        if: matrix.asset_tracker != 'disable'
-        run: |
-          docker run --rm \
-            -v ${PWD}:/workdir/project \
-            -w /workdir/nrf/applications/asset_tracker \
-            nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
-              west build -b nrf9160dk_nrf9160ns  --build-dir /workdir/project/build -- -DEXTRA_CFLAGS="-Werror -Wno-dev"
+      # - name: Build asset_tracker application
+      #   if: matrix.asset_tracker != 'disable'
+      #   run: |
+      #     docker run --rm \
+      #       -v ${PWD}:/workdir/project \
+      #       -w /workdir/nrf/applications/asset_tracker \
+      #       crzyrndm/nrfconnect-sdk:${{ matrix.ncs_branch }} \
+      #         west build -b nrf9160dk_nrf9160ns  --build-dir /workdir/project/build -- -DEXTRA_CFLAGS="-Werror -Wno-dev"
 
-      - uses: actions/upload-artifact@v3
-        if: matrix.asset_tracker != 'disable'
-        with:
-          if-no-files-found: error
-          name: asset_tracker-${{ matrix.ncs_branch }}
-          path: |
-            build/zephyr/merged.hex
-            build/zephyr/app_update.bin
+      # - uses: actions/upload-artifact@v3
+      #   if: matrix.asset_tracker != 'disable'
+      #   with:
+      #     if-no-files-found: error
+      #     name: asset_tracker-${{ matrix.ncs_branch }}
+      #     path: |
+      #       build/zephyr/merged.hex
+      #       build/zephyr/app_update.bin
 
-      - name: Build asset_tracker_v2 application
-        if: matrix.asset_tracker_v2 != 'disable'
-        run: |
-          docker run --rm \
-            -v ${PWD}:/workdir/project \
-            -w /workdir/nrf/applications/asset_tracker_v2 \
-            nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
-              west build -b nrf9160dk_nrf9160ns --build-dir /workdir/project/build -- -DEXTRA_CFLAGS="-Werror -Wno-dev"
+      # - name: Build asset_tracker_v2 application
+      #   if: matrix.asset_tracker_v2 != 'disable'
+      #   run: |
+      #     docker run --rm \
+      #       -v ${PWD}:/workdir/project \
+      #       -w /workdir/nrf/applications/asset_tracker_v2 \
+      #       crzyrndm/nrfconnect-sdk:${{ matrix.ncs_branch }} \
+      #         west build -b nrf9160dk_nrf9160ns --build-dir /workdir/project/build -- -DEXTRA_CFLAGS="-Werror -Wno-dev"
 
-      - uses: actions/upload-artifact@v3
-        if: matrix.asset_tracker_v2 != 'disable'
-        with:
-          if-no-files-found: error
-          name: asset_tracker_v2-${{ matrix.ncs_branch }}
-          path: |
-            build/zephyr/merged.hex
-            build/zephyr/app_update.bin
+      # - uses: actions/upload-artifact@v3
+      #   if: matrix.asset_tracker_v2 != 'disable'
+      #   with:
+      #     if-no-files-found: error
+      #     name: asset_tracker_v2-${{ matrix.ncs_branch }}
+      #     path: |
+      #       build/zephyr/merged.hex
+      #       build/zephyr/app_update.bin
 
       - name: Ensure nrfutil works
         run: |
-          docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} nrfutil version
+          docker run --rm crzyrndm/nrfconnect-sdk:${{ matrix.ncs_branch }} nrfutil version
 
       - name: Ensure nrfjprog works
         run: |
-          docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} nrfjprog -v
+          docker run --rm crzyrndm/nrfconnect-sdk:${{ matrix.ncs_branch }} nrfjprog -v
 
       - name: Ensure clang-format works
         run: |
-          docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} clang-format --version
+          docker run --rm crzyrndm/nrfconnect-sdk:${{ matrix.ncs_branch }} clang-format --version
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: nordicplayground
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Publish image
+      - name: Ensure pwsh works
         run: |
-          docker images
-          docker push nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }}
+          docker run --rm crzyrndm/nrfconnect-sdk:${{ matrix.ncs_branch }} pwsh --version
+
+      # - name: Login to Docker Hub
+      #   uses: docker/login-action@v2
+      #   with:
+      #     username: nordicplayground
+      #     password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # - name: Publish image
+      #   run: |
+      #     docker images
+      #     docker push nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }}
