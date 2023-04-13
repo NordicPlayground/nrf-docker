@@ -30,6 +30,14 @@ RUN mkdir /workdir/.cache && \
         file \
         gcc-multilib \
         ruby && \
+    # install pwsh 7 following instruxtions from here: https://learn.microsoft.com/en-us/powershell/scripting/install/install-ubuntu?view=powershell-7.3
+    apt-get install apt-transport-https software-properties-common && \
+    wget -q "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb" && \
+    dpkg -i packages-microsoft-prod.deb && \
+    rm packages-microsoft-prod.deb && \
+    apt-get -y update && \
+    apt-get install -y powershell && \
+    # continue with build
     apt-get -y clean && apt-get -y autoremove && \
     #
     # Latest PIP & Python dependencies
