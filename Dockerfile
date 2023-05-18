@@ -28,8 +28,12 @@ RUN mkdir /workdir/.cache && \
         device-tree-compiler \
         xz-utils \
         file \
-        gcc-multilib \
         ruby && \
+    case $arch in \
+    "amd64") \
+        apt-get -y install gcc-multilib \
+        ;; \
+    esac && \
     apt-get -y clean && apt-get -y autoremove && \
     #
     # Latest PIP & Python dependencies
