@@ -134,8 +134,12 @@ RUN mkdir /workdir/.cache && \
 # Download sdk-nrf and west dependencies to install pip requirements
 FROM base
 ARG sdk_nrf_revision=main
+ARG sdk_nrf_commit
 RUN \
     west init -m https://github.com/nrfconnect/sdk-nrf --mr ${sdk_nrf_revision} && \
+    if [[ $sdk_nrf_commit =~ "^[a-fA-F0-9]{32}$" ]]; then \
+        git checkout ${sdk_nrf_revision} ; \
+    fi && \
     west update --narrow -o=--depth=1 && \
     echo "Installing requirements: zephyr/scripts/requirements.txt" && \
     python3 -m pip install -r zephyr/scripts/requirements.txt && \
