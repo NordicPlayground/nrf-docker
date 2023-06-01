@@ -13,6 +13,7 @@ jobs:
       matrix:
         ncs_branch:
           - main
+          - v2.4-branch
           - v2.3-branch
           - v2.2-branch
           - v2.1-branch
@@ -30,6 +31,8 @@ jobs:
             # Removed in v1.9
             asset_tracker: disable
             asset_tracker_v2: enable
+
+          - ncs_branch: v2.4-branch
 
           - ncs_branch: v2.3-branch
 
