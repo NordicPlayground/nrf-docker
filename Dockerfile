@@ -3,10 +3,11 @@ WORKDIR /workdir
 
 ARG arch=amd64
 ARG crossarch=arm-zephyr-eabi
-ARG ZEPHYR_TOOLCHAIN_VERSION=0.15.2
+ARG ZEPHYR_TOOLCHAIN_VERSION=0.16.0
+ARG ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT=xz
 ARG WEST_VERSION=0.14.0
 ARG NRF_UTIL_VERSION=6.1.7
-ARG NORDIC_COMMAND_LINE_TOOLS_VERSION="10-18-1/nrf-command-line-tools-10.18.1"
+ARG NORDIC_COMMAND_LINE_TOOLS_VERSION="10-21-0/nrf-command-line-tools-10.21.0"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -100,10 +101,10 @@ RUN mkdir /workdir/.cache && \
     echo "Zephyr Toolchain version: ${ZEPHYR_TOOLCHAIN_VERSION}" && \
     case $arch in \
         "amd64") \
-            ZEPHYR_MINIMAL_BUNDLE_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZEPHYR_TOOLCHAIN_VERSION}/zephyr-sdk-${ZEPHYR_TOOLCHAIN_VERSION}_linux-x86_64_minimal.tar.gz" \
+            ZEPHYR_MINIMAL_BUNDLE_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZEPHYR_TOOLCHAIN_VERSION}/zephyr-sdk-${ZEPHYR_TOOLCHAIN_VERSION}_linux-x86_64_minimal.tar.${ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT}" \
             ;; \
         "arm64") \
-            ZEPHYR_MINIMAL_BUNDLE_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZEPHYR_TOOLCHAIN_VERSION}/zephyr-sdk-${ZEPHYR_TOOLCHAIN_VERSION}_macos-aarch64_minimal.tar.gz" \
+            ZEPHYR_MINIMAL_BUNDLE_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZEPHYR_TOOLCHAIN_VERSION}/zephyr-sdk-${ZEPHYR_TOOLCHAIN_VERSION}_macos-aarch64_minimal.tar.${ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT}" \
             ;; \
         *) \
             echo "Unsupported host architecture: \"${arch}\"" >&2 && \
