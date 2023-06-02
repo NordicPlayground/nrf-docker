@@ -8,7 +8,7 @@ ARG ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT=xz
 ARG WEST_VERSION=1.0.0
 # These are the legacy utils, see https://github.com/NordicPlayground/nrf-docker/issues/68
 ARG NRF_UTIL_VERSION=6.1.7
-ARG NORDIC_COMMAND_LINE_TOOLS_VERSION="10-21-0/nrf-command-line-tools_10.21.0"
+ARG NORDIC_COMMAND_LINE_TOOLS_VERSION="10-21-0/nrf-command-line-tools-10.21.0"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -67,23 +67,28 @@ RUN mkdir /workdir/.cache && \
     #
     # Nordic command line tools
     # Releases: https://www.nordicsemi.com/Products/Development-tools/nrf-command-line-tools/download
-    #
     NCLT_BASE=https://nsscprodmedia.blob.core.windows.net/prod/software-and-other-downloads/desktop-software/nrf-command-line-tools/sw/versions-10-x-x && \
     echo "Host architecture: $arch" && \
     case $arch in \
         "amd64") \
-            NCLT_URL="${NCLT_BASE}/${NORDIC_COMMAND_LINE_TOOLS_VERSION}_amd64.deb" \
+            NCLT_URL="${NCLT_BASE}/${NORDIC_COMMAND_LINE_TOOLS_VERSION}_linux-amd64.tar.gz" \
             ;; \
         "arm64") \
-            NCLT_URL="${NCLT_BASE}/${NORDIC_COMMAND_LINE_TOOLS_VERSION}_arm64.deb" \
+            NCLT_URL="${NCLT_BASE}/${NORDIC_COMMAND_LINE_TOOLS_VERSION}_linux-arm64.tar.gz" \
             ;; \
     esac && \
     echo "NCLT_URL=${NCLT_URL}" && \
-    # Releases: https://www.nordicsemi.com/Software-and-tools/Development-Tools/nRF-Command-Line-Tools/Download
     if [ ! -z "$NCLT_URL" ]; then \
-        wget -q "${NCLT_URL}" && \
-        DEBIAN_FRONTEND=noninteractive apt-get -y install ./*.deb && \
-        rm *.deb; \
+        mkdir tmp && cd tmp && \
+        wget -qO - "${NCLT_URL}" | tar --no-same-owner -xz && \
+        # Install included JLink
+        mkdir /opt/SEGGER && \
+        tar xzf JLink_*.tgz -C /opt/SEGGER && \
+        # Install nrf-command-line-tools
+        cp -r ./nrf-command-line-tools /opt && \
+        ln -s /opt/nrf-command-line-tools/bin/nrfjprog /usr/local/bin/nrfjprog && \
+        ln -s /opt/nrf-command-line-tools/bin/mergehex /usr/local/bin/mergehex && \
+        cd .. && rm -rf tmp ; \
     else \
         echo "Skipping nRF Command Line Tools (not available for $arch)" ; \
     fi && \
