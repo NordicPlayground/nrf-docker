@@ -5,7 +5,8 @@ ARG arch=amd64
 ARG crossarch=arm-zephyr-eabi
 ARG ZEPHYR_TOOLCHAIN_VERSION=0.16.0
 ARG ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT=xz
-ARG WEST_VERSION=0.14.0
+ARG WEST_VERSION=1.0.0
+# These are the legacy utils, see https://github.com/NordicPlayground/nrf-docker/issues/68
 ARG NRF_UTIL_VERSION=6.1.7
 ARG NORDIC_COMMAND_LINE_TOOLS_VERSION="10-21-0/nrf-command-line-tools_10.21.0"
 
@@ -80,15 +81,9 @@ RUN mkdir /workdir/.cache && \
     echo "NCLT_URL=${NCLT_URL}" && \
     # Releases: https://www.nordicsemi.com/Software-and-tools/Development-Tools/nRF-Command-Line-Tools/Download
     if [ ! -z "$NCLT_URL" ]; then \
-        mkdir tmp && cd tmp && \
         wget -q "${NCLT_URL}" && \
-        # Install included JLink
         DEBIAN_FRONTEND=noninteractive apt-get -y install ./*.deb && \
-        # Install nrf-command-line-tools
-        cp -r ./nrf-command-line-tools /opt && \
-        ln -s /opt/nrf-command-line-tools/bin/nrfjprog /usr/local/bin/nrfjprog && \
-        ln -s /opt/nrf-command-line-tools/bin/mergehex /usr/local/bin/mergehex && \
-        cd .. && rm -rf tmp ; \
+        rm *.deb; \
     else \
         echo "Skipping nRF Command Line Tools (not available for $arch)" ; \
     fi && \
@@ -111,7 +106,12 @@ RUN mkdir /workdir/.cache && \
             exit 1 ;; \
     esac && \
     echo "Install Zephyr SDK from ZEPHYR_MINIMAL_BUNDLE_URL=${ZEPHYR_MINIMAL_BUNDLE_URL}" && \
-    wget -qO - "${ZEPHYR_MINIMAL_BUNDLE_URL}" | tar xz && \
+    case $ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT in \
+        "gz") \
+            wget -qO - "${ZEPHYR_MINIMAL_BUNDLE_URL}" | tar xz;; \
+        *) \
+            wget -qO - "${ZEPHYR_MINIMAL_BUNDLE_URL}" | tar xJ;; \
+    esac && \
     mv /workdir/zephyr-sdk-${ZEPHYR_TOOLCHAIN_VERSION} /workdir/zephyr-sdk && cd /workdir/zephyr-sdk && \
     case $arch in \
         "arm64") \
