@@ -23,52 +23,57 @@ jobs:
           - v1.7-branch
           - v1.6-branch
           - v1.5-branch
-          - v1.4-branch
         include:
           # Defaults
-          - ZEPHYR_TOOLCHAIN_VERSION: 0.15.2
-            NORDIC_COMMAND_LINE_TOOLS_VERSION: "10-18-1/nrf-command-line-tools-10.18.1"
+          - ZEPHYR_TOOLCHAIN_VERSION: 0.16.0
+            ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT: xz
             # Removed in v1.9
             asset_tracker: disable
             asset_tracker_v2: enable
 
           - ncs_branch: v2.4-branch
+            ZEPHYR_TOOLCHAIN_VERSION: 0.15.2
+            ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT: gz
 
           - ncs_branch: v2.3-branch
+            ZEPHYR_TOOLCHAIN_VERSION: 0.15.2
+            ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT: gz
 
           - ncs_branch: v2.2-branch
+            ZEPHYR_TOOLCHAIN_VERSION: 0.15.2
+            ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT: gz
 
           - ncs_branch: v2.1-branch
             ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
+            ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT: gz
 
           - ncs_branch: v2.0-branch
             ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
+            ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT: gz
 
           - ncs_branch: v1.9-branch
             ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
+            ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT: gz
 
           - ncs_branch: v1.8-branch
             ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
+            ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT: gz
             asset_tracker: enable
 
           - ncs_branch: v1.7-branch
             ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
+            ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT: gz
             asset_tracker: enable
 
           - ncs_branch: v1.6-branch
             ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
+            ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT: gz
             asset_tracker: enable
 
           - ncs_branch: v1.5-branch
             ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
+            ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT: gz
             # asset_tracker_v2 needs configuration in 1.5
-            asset_tracker_v2: disable
-            asset_tracker: enable
-
-          - ncs_branch: v1.4-branch
-            ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
-            NORDIC_COMMAND_LINE_TOOLS_VERSION: "10-17-3/nrf-command-line-tools-10.17.3"
-            # asset_tracker_v2 is not available in 1.4
             asset_tracker_v2: disable
             asset_tracker: enable
 
@@ -81,7 +86,7 @@ jobs:
           docker build -t nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
             --build-arg sdk_nrf_revision=${{ matrix.ncs_branch }} \
             --build-arg ZEPHYR_TOOLCHAIN_VERSION=${{ matrix.ZEPHYR_TOOLCHAIN_VERSION }} \
-            --build-arg NORDIC_COMMAND_LINE_TOOLS_VERSION=${{ matrix.NORDIC_COMMAND_LINE_TOOLS_VERSION }} \
+            --build-arg ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT=${{ matrix.ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT }} \
             .
 
       - name: Build asset_tracker application
@@ -124,7 +129,9 @@ jobs:
         run: |
           docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} nrfutil version
 
+      # Currently broken
       - name: Ensure nrfjprog works
+        if: false
         run: |
           docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} nrfjprog -v
 

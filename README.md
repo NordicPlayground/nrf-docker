@@ -1,7 +1,7 @@
 # Docker image for building nRF Connect SDK applications
 
 ![Publish Docker](https://github.com/NordicPlayground/nrf-docker/workflows/Publish%20Docker/badge.svg?branch=saga)
-(_the [Docker image](https://hub.docker.com/r/nordicplayground/nrfconnect-sdk) is build against [nRF Connect SDK](https://github.com/nrfconnect/sdk-nrf) `main`,`v2.4-branch`,`v2.3-branch`,`v2.2-branch`,`v2.1-branch`,`v2.0-branch`,`v1.9-branch`,`v1.8-branch`, `v1.7-branch`, `v1.6-branch`, `v1.5-branch`, and `v1.4-branch` every night._)
+(_the [Docker image](https://hub.docker.com/r/nordicplayground/nrfconnect-sdk) is build against [nRF Connect SDK](https://github.com/nrfconnect/sdk-nrf) `main`,`v2.4-branch`,`v2.3-branch`,`v2.2-branch`,`v2.1-branch`,`v2.0-branch`,`v1.9-branch`,`v1.8-branch`, `v1.7-branch`, `v1.6-branch`, and `v1.5-branch` every night._)
 
 This project defines a Docker image that contains all dependencies to run `west` commands with the nRF Connect SDK. Bind mount the project folder you'd like to build, and the output will end up in the same folder (nested in build/zephyr subdir of the app).
 

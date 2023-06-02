@@ -3,10 +3,12 @@ WORKDIR /workdir
 
 ARG arch=amd64
 ARG crossarch=arm-zephyr-eabi
-ARG ZEPHYR_TOOLCHAIN_VERSION=0.15.2
-ARG WEST_VERSION=0.14.0
+ARG ZEPHYR_TOOLCHAIN_VERSION=0.16.0
+ARG ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT=xz
+ARG WEST_VERSION=1.0.0
+# These are the legacy utils, see https://github.com/NordicPlayground/nrf-docker/issues/68
 ARG NRF_UTIL_VERSION=6.1.7
-ARG NORDIC_COMMAND_LINE_TOOLS_VERSION="10-18-1/nrf-command-line-tools-10.18.1"
+ARG NORDIC_COMMAND_LINE_TOOLS_VERSION="10-21-0/nrf-command-line-tools-10.21.0"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -65,7 +67,6 @@ RUN mkdir /workdir/.cache && \
     #
     # Nordic command line tools
     # Releases: https://www.nordicsemi.com/Products/Development-tools/nrf-command-line-tools/download
-    #
     NCLT_BASE=https://nsscprodmedia.blob.core.windows.net/prod/software-and-other-downloads/desktop-software/nrf-command-line-tools/sw/versions-10-x-x && \
     echo "Host architecture: $arch" && \
     case $arch in \
@@ -77,12 +78,12 @@ RUN mkdir /workdir/.cache && \
             ;; \
     esac && \
     echo "NCLT_URL=${NCLT_URL}" && \
-    # Releases: https://www.nordicsemi.com/Software-and-tools/Development-Tools/nRF-Command-Line-Tools/Download
     if [ ! -z "$NCLT_URL" ]; then \
         mkdir tmp && cd tmp && \
         wget -qO - "${NCLT_URL}" | tar --no-same-owner -xz && \
         # Install included JLink
-        DEBIAN_FRONTEND=noninteractive apt-get -y install ./*.deb && \
+        mkdir /opt/SEGGER && \
+        tar xzf JLink_*.tgz -C /opt/SEGGER && \
         # Install nrf-command-line-tools
         cp -r ./nrf-command-line-tools /opt && \
         ln -s /opt/nrf-command-line-tools/bin/nrfjprog /usr/local/bin/nrfjprog && \
@@ -100,17 +101,22 @@ RUN mkdir /workdir/.cache && \
     echo "Zephyr Toolchain version: ${ZEPHYR_TOOLCHAIN_VERSION}" && \
     case $arch in \
         "amd64") \
-            ZEPHYR_MINIMAL_BUNDLE_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZEPHYR_TOOLCHAIN_VERSION}/zephyr-sdk-${ZEPHYR_TOOLCHAIN_VERSION}_linux-x86_64_minimal.tar.gz" \
+            ZEPHYR_MINIMAL_BUNDLE_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZEPHYR_TOOLCHAIN_VERSION}/zephyr-sdk-${ZEPHYR_TOOLCHAIN_VERSION}_linux-x86_64_minimal.tar.${ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT}" \
             ;; \
         "arm64") \
-            ZEPHYR_MINIMAL_BUNDLE_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZEPHYR_TOOLCHAIN_VERSION}/zephyr-sdk-${ZEPHYR_TOOLCHAIN_VERSION}_macos-aarch64_minimal.tar.gz" \
+            ZEPHYR_MINIMAL_BUNDLE_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZEPHYR_TOOLCHAIN_VERSION}/zephyr-sdk-${ZEPHYR_TOOLCHAIN_VERSION}_macos-aarch64_minimal.tar.${ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT}" \
             ;; \
         *) \
             echo "Unsupported host architecture: \"${arch}\"" >&2 && \
             exit 1 ;; \
     esac && \
     echo "Install Zephyr SDK from ZEPHYR_MINIMAL_BUNDLE_URL=${ZEPHYR_MINIMAL_BUNDLE_URL}" && \
-    wget -qO - "${ZEPHYR_MINIMAL_BUNDLE_URL}" | tar xz && \
+    case $ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT in \
+        "gz") \
+            wget -qO - "${ZEPHYR_MINIMAL_BUNDLE_URL}" | tar xz;; \
+        *) \
+            wget -qO - "${ZEPHYR_MINIMAL_BUNDLE_URL}" | tar xJ;; \
+    esac && \
     mv /workdir/zephyr-sdk-${ZEPHYR_TOOLCHAIN_VERSION} /workdir/zephyr-sdk && cd /workdir/zephyr-sdk && \
     case $arch in \
         "arm64") \
@@ -143,19 +149,11 @@ RUN \
     west update --narrow -o=--depth=1 && \
     echo "Installing requirements: zephyr/scripts/requirements.txt" && \
     python3 -m pip install -r zephyr/scripts/requirements.txt && \
-    case $sdk_nrf_revision in \
-        "v1.4-branch") \
-            echo "Installing requirements: nrf/scripts/requirements.txt" && \
-            python3 -m pip install -r nrf/scripts/requirements.txt \
-        ;; \
-        *) \
-            # Install only the requirements needed for building firmware, not documentation
-            echo "Installing requirements: nrf/scripts/requirements-base.txt" && \
-            python3 -m pip install -r nrf/scripts/requirements-base.txt && \
-            echo "Installing requirements: nrf/scripts/requirements-build.txt" && \
-            python3 -m pip install -r nrf/scripts/requirements-build.txt \
-        ;; \
-    esac && \
+    # Install only the requirements needed for building firmware, not documentation
+    echo "Installing requirements: nrf/scripts/requirements-base.txt" && \
+    python3 -m pip install -r nrf/scripts/requirements-base.txt && \
+    echo "Installing requirements: nrf/scripts/requirements-build.txt" && \
+    python3 -m pip install -r nrf/scripts/requirements-build.txt && \
     echo "Installing requirements: bootloader/mcuboot/scripts/requirements.txt" && \
     python3 -m pip install -r bootloader/mcuboot/scripts/requirements.txt
 
