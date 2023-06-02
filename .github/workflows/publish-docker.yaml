@@ -23,11 +23,9 @@ jobs:
           - v1.7-branch
           - v1.6-branch
           - v1.5-branch
-          - v1.4-branch
         include:
           # Defaults
           - ZEPHYR_TOOLCHAIN_VERSION: 0.15.2
-            NORDIC_COMMAND_LINE_TOOLS_VERSION: "10-18-1/nrf-command-line-tools-10.18.1"
             # Removed in v1.9
             asset_tracker: disable
             asset_tracker_v2: enable
@@ -65,13 +63,6 @@ jobs:
             asset_tracker_v2: disable
             asset_tracker: enable
 
-          - ncs_branch: v1.4-branch
-            ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
-            NORDIC_COMMAND_LINE_TOOLS_VERSION: "10-17-3/nrf-command-line-tools-10.17.3"
-            # asset_tracker_v2 is not available in 1.4
-            asset_tracker_v2: disable
-            asset_tracker: enable
-
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -81,7 +72,6 @@ jobs:
           docker build -t nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
             --build-arg sdk_nrf_revision=${{ matrix.ncs_branch }} \
             --build-arg ZEPHYR_TOOLCHAIN_VERSION=${{ matrix.ZEPHYR_TOOLCHAIN_VERSION }} \
-            --build-arg NORDIC_COMMAND_LINE_TOOLS_VERSION=${{ matrix.NORDIC_COMMAND_LINE_TOOLS_VERSION }} \
             .
 
       - name: Build asset_tracker application

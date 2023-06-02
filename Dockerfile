@@ -7,7 +7,7 @@ ARG ZEPHYR_TOOLCHAIN_VERSION=0.16.0
 ARG ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT=xz
 ARG WEST_VERSION=0.14.0
 ARG NRF_UTIL_VERSION=6.1.7
-ARG NORDIC_COMMAND_LINE_TOOLS_VERSION="10-21-0/nrf-command-line-tools-10.21.0"
+ARG NORDIC_COMMAND_LINE_TOOLS_VERSION="10-21-0/nrf-command-line-tools_10.21.0"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -71,17 +71,17 @@ RUN mkdir /workdir/.cache && \
     echo "Host architecture: $arch" && \
     case $arch in \
         "amd64") \
-            NCLT_URL="${NCLT_BASE}/${NORDIC_COMMAND_LINE_TOOLS_VERSION}_linux-amd64.tar.gz" \
+            NCLT_URL="${NCLT_BASE}/${NORDIC_COMMAND_LINE_TOOLS_VERSION}_amd64.deb" \
             ;; \
         "arm64") \
-            NCLT_URL="${NCLT_BASE}/${NORDIC_COMMAND_LINE_TOOLS_VERSION}_linux-arm64.tar.gz" \
+            NCLT_URL="${NCLT_BASE}/${NORDIC_COMMAND_LINE_TOOLS_VERSION}_arm64.deb" \
             ;; \
     esac && \
     echo "NCLT_URL=${NCLT_URL}" && \
     # Releases: https://www.nordicsemi.com/Software-and-tools/Development-Tools/nRF-Command-Line-Tools/Download
     if [ ! -z "$NCLT_URL" ]; then \
         mkdir tmp && cd tmp && \
-        wget -qO - "${NCLT_URL}" | tar --no-same-owner -xz && \
+        wget -q "${NCLT_URL}" && \
         # Install included JLink
         DEBIAN_FRONTEND=noninteractive apt-get -y install ./*.deb && \
         # Install nrf-command-line-tools
@@ -144,19 +144,11 @@ RUN \
     west update --narrow -o=--depth=1 && \
     echo "Installing requirements: zephyr/scripts/requirements.txt" && \
     python3 -m pip install -r zephyr/scripts/requirements.txt && \
-    case $sdk_nrf_revision in \
-        "v1.4-branch") \
-            echo "Installing requirements: nrf/scripts/requirements.txt" && \
-            python3 -m pip install -r nrf/scripts/requirements.txt \
-        ;; \
-        *) \
-            # Install only the requirements needed for building firmware, not documentation
-            echo "Installing requirements: nrf/scripts/requirements-base.txt" && \
-            python3 -m pip install -r nrf/scripts/requirements-base.txt && \
-            echo "Installing requirements: nrf/scripts/requirements-build.txt" && \
-            python3 -m pip install -r nrf/scripts/requirements-build.txt \
-        ;; \
-    esac && \
+    # Install only the requirements needed for building firmware, not documentation
+    echo "Installing requirements: nrf/scripts/requirements-base.txt" && \
+    python3 -m pip install -r nrf/scripts/requirements-base.txt && \
+    echo "Installing requirements: nrf/scripts/requirements-build.txt" && \
+    python3 -m pip install -r nrf/scripts/requirements-build.txt && \
     echo "Installing requirements: bootloader/mcuboot/scripts/requirements.txt" && \
     python3 -m pip install -r bootloader/mcuboot/scripts/requirements.txt
 
