@@ -79,6 +79,7 @@ jobs:
           docker build -t nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
             --build-arg sdk_nrf_revision=${{ matrix.ncs_branch }} \
             --build-arg ZEPHYR_TOOLCHAIN_VERSION=${{ matrix.ZEPHYR_TOOLCHAIN_VERSION }} \
+            --build-arg ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT=${{ matrix.ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT }} \
             .
 
       - name: Build asset_tracker application
