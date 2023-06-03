@@ -84,6 +84,7 @@ RUN mkdir /workdir/.cache && \
         # Install included JLink
         mkdir /opt/SEGGER && \
         tar xzf JLink_*.tgz -C /opt/SEGGER && \
+        mv /opt/SEGGER/JLink* /opt/SEGGER/JLink && \
         # Install nrf-command-line-tools
         cp -r ./nrf-command-line-tools /opt && \
         ln -s /opt/nrf-command-line-tools/bin/nrfjprog /usr/local/bin/nrfjprog && \

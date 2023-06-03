@@ -129,9 +129,7 @@ jobs:
         run: |
           docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} nrfutil version
 
-      # Currently broken
       - name: Ensure nrfjprog works
-        if: false
         run: |
           docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} nrfjprog -v
 
