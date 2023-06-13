@@ -33,7 +33,7 @@ jobs:
             ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT: gz
 
           - ncs_branch: v2.2-branch
-            ZEPHYR_TOOLCHAIN_VERSION: 0.15.2
+            ZEPHYR_TOOLCHAIN_VERSION: 0.15.1
             ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT: gz
 
           - ncs_branch: v2.1-branch
