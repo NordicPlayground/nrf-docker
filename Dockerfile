@@ -29,7 +29,11 @@ EOT
 #
 RUN <<EOT
     apt-get -y install clang-format
-    wget -qO- https://raw.githubusercontent.com/nrfconnect/sdk-nrf/${sdk_nrf_version}/.clang-format > /workdir/.clang-format
+    sdk_nrf_branch=${sdk_nrf_version}
+    if [[ $sdk_nrf_version != "main" ]]; then \
+        sdk_nrf_branch=${sdk_nrf_branch}-branch; \
+    fi
+    wget -qO- https://raw.githubusercontent.com/nrfconnect/sdk-nrf/${sdk_nrf_branch}-branch/.clang-format > /workdir/.clang-format
 EOT
 
 # Nordic command line tools
