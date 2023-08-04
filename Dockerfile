@@ -68,7 +68,7 @@ SHELL ["nrfutil","toolchain-manager","launch","/bin/bash","--","-c"]
 RUN <<EOT
     west init -m https://github.com/nrfconnect/sdk-nrf --mr ${sdk_nrf_version} .
     if [[ $sdk_nrf_commit =~ "^[a-fA-F0-9]{32}$" ]]; then \
-        git checkout ${sdk_nrf_version} ; \
+        git checkout ${sdk_nrf_version}; \
     fi
     west update --narrow -o=--depth=1
 EOT
