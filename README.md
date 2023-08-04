@@ -7,7 +7,7 @@ This project defines a Docker image that contains all dependencies to run `west`
 
 The aim is to provide a Docker image that can compile application and samples in a [nRF Connect SDK](https://github.com/nrfconnect/sdk-nrf) release branch, not to exactly replicate the software configuration used when the release was made.
 
-More specificially, the purpose of this project is *not* to provide stable images, but replicate what users are facing when they start developing with nRF Connect SDK (which itself does not provide a reproducible build environment). Because of that, dependencies for building the nRF Connect SDK might break at every given day. This is however mitigated by the [Toolchain Manager](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/nrf/installation/assistant.html#install-toolchain-manager), which is however today not available for command line usage.
+More specificially, the purpose of this project is _not_ to provide stable images, but replicate what users are facing when they start developing with nRF Connect SDK (which itself does not provide a reproducible build environment). Because of that, dependencies for building the nRF Connect SDK might break at every given day. This is however mitigated by the [Toolchain Manager](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/nrf/installation/assistant.html#install-toolchain-manager), which is however today not available for command line usage.
 
 > ℹ️ Read more about this aproach [here](https://devzone.nordicsemi.com/nordic/nrf-connect-sdk-guides/b/getting-started/posts/build-ncs-application-firmware-images-using-docker).
 
@@ -31,12 +31,12 @@ Build the image (this is only needed once):
 
 ```bash
 cd nrf-docker
-docker build -t nrfconnect-sdk --build-arg sdk_nrf_revision=v2.4-branch .
+docker build -t nrfconnect-sdk --build-arg sdk_nrf_version=v2.4-branch .
 ```
 
 > 🍏 _Note:_ To build for a Mac with the M1 architecture, you need to specify the `arm64` architecture when building: `--build-arg arch=arm64`.
 
-> ℹ️ The `sdk_nrf_revision` build argument can be used to specify what version of the nRF Connect SDK that will be used when looking up dependencies with pip for the SDK and it's west dependency repositories. The value can be a git _tag_, _branch_ or _sha_ from the [nRF Connect SDK repository](https://github.com/nrfconnect/sdk-nrf).
+> ℹ️ The `sdk_nrf_version` build argument can be used to specify what version of the nRF Connect SDK that will be used when looking up dependencies with pip for the SDK and it's west dependency repositories. The value can be a git _tag_, _branch_ or _sha_ from the [nRF Connect SDK repository](https://github.com/nrfconnect/sdk-nrf).
 
 ### Use pre-built image from Dockerhub
 
@@ -90,7 +90,7 @@ docker run --rm -v ${PWD}:/workdir/project \
 # build docker image
 git clone https://github.com/NordicPlayground/nrf-docker
 cd nrf-docker
-docker build -t nrfconnect-sdk --build-arg sdk_nrf_revision=v2.4-branch .
+docker build -t nrfconnect-sdk --build-arg sdk_nrf_version=v2.4-branch .
 cd ..
 ```
 
