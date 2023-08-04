@@ -1,7 +1,8 @@
 FROM ubuntu:22.04 as base
 WORKDIR /workdir
 
-ARG sdk_nrf_version=v2.4.0
+ARG sdk_nrf_branch=v2.4-branch
+ARG toolchain_version=v2.4.1
 ARG sdk_nrf_commit
 ARG NORDIC_COMMAND_LINE_TOOLS_VERSION="10-23-0/nrf-command-line-tools-10.23.0"
 ARG arch=amd64
@@ -20,7 +21,8 @@ RUN <<EOT
     mv nrfutil /usr/local/bin
     chmod +x /usr/local/bin/nrfutil
     nrfutil install toolchain-manager
-    nrfutil toolchain-manager install --ncs-version ${sdk_nrf_version}
+    nrfutil install toolchain-manager search
+    nrfutil toolchain-manager install --ncs-version ${toolchain_version}
     nrfutil toolchain-manager list
 EOT
 
@@ -29,10 +31,6 @@ EOT
 #
 RUN <<EOT
     apt-get -y install clang-format
-    sdk_nrf_branch=${sdk_nrf_version}
-    if [[ "$sdk_nrf_version" != "main" ]]; then
-        sdk_nrf_branch=${sdk_nrf_branch}-branch;
-    fi
     wget -qO- https://raw.githubusercontent.com/nrfconnect/sdk-nrf/${sdk_nrf_branch}/.clang-format > /workdir/.clang-format
 EOT
 
@@ -70,9 +68,9 @@ EOT
 # Prepare image with a ready to use build environment
 SHELL ["nrfutil","toolchain-manager","launch","/bin/bash","--","-c"]
 RUN <<EOT
-    west init -m https://github.com/nrfconnect/sdk-nrf --mr ${sdk_nrf_version} .
+    west init -m https://github.com/nrfconnect/sdk-nrf --mr ${sdk_nrf_branch} .
     if [[ $sdk_nrf_commit =~ "^[a-fA-F0-9]{32}$" ]]; then
-        git checkout ${sdk_nrf_version};
+        git checkout ${sdk_nrf_commit};
     fi
     west update --narrow -o=--depth=1
 EOT
