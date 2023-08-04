@@ -3,7 +3,7 @@ WORKDIR /workdir
 
 ARG sdk_nrf_version=v2.4.0
 ARG sdk_nrf_commit
-ARG NORDIC_COMMAND_LINE_TOOLS_VERSION="10-21-0/nrf-command-line-tools-10.21.0"
+ARG NORDIC_COMMAND_LINE_TOOLS_VERSION="10-23-0/nrf-command-line-tools-10.23.0"
 ARG arch=amd64
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -30,8 +30,8 @@ EOT
 RUN <<EOT
     apt-get -y install clang-format
     sdk_nrf_branch=${sdk_nrf_version}
-    if [[ $sdk_nrf_version != "main" ]]; then \
-        sdk_nrf_branch=${sdk_nrf_branch}-branch; \
+    if [[ "$sdk_nrf_version" != "main" ]]; then
+        sdk_nrf_branch=${sdk_nrf_branch}-branch;
     fi
     wget -qO- https://raw.githubusercontent.com/nrfconnect/sdk-nrf/${sdk_nrf_branch}/.clang-format > /workdir/.clang-format
 EOT
@@ -41,16 +41,16 @@ EOT
 RUN <<EOT
     NCLT_BASE=https://nsscprodmedia.blob.core.windows.net/prod/software-and-other-downloads/desktop-software/nrf-command-line-tools/sw/versions-10-x-x
     echo "Host architecture: $arch"
-    case $arch in \
-        "amd64") \
-            NCLT_URL="${NCLT_BASE}/${NORDIC_COMMAND_LINE_TOOLS_VERSION}_linux-amd64.tar.gz" \
-            ;; \
-        "arm64") \
-            NCLT_URL="${NCLT_BASE}/${NORDIC_COMMAND_LINE_TOOLS_VERSION}_linux-arm64.tar.gz" \
-            ;; \
+    case $arch in
+        "amd64")
+            NCLT_URL="${NCLT_BASE}/${NORDIC_COMMAND_LINE_TOOLS_VERSION}_linux-amd64.tar.gz"
+            ;;
+        "arm64")
+            NCLT_URL="${NCLT_BASE}/${NORDIC_COMMAND_LINE_TOOLS_VERSION}_linux-arm64.tar.gz"
+            ;;
     esac
     echo "NCLT_URL=${NCLT_URL}"
-    if [ ! -z "$NCLT_URL" ]; then \
+    if [ ! -z "$NCLT_URL" ]; then
         mkdir tmp && cd tmp
         wget -qO - "${NCLT_URL}" | tar --no-same-owner -xz
         # Install included JLink
@@ -61,9 +61,9 @@ RUN <<EOT
         cp -r ./nrf-command-line-tools /opt
         ln -s /opt/nrf-command-line-tools/bin/nrfjprog /usr/local/bin/nrfjprog
         ln -s /opt/nrf-command-line-tools/bin/mergehex /usr/local/bin/mergehex
-        cd .. && rm -rf tmp ; \
-    else \
-        echo "Skipping nRF Command Line Tools (not available for $arch)" ; \
+        cd .. && rm -rf tmp ;
+    else
+        echo "Skipping nRF Command Line Tools (not available for $arch)" ;
     fi
 EOT
 
@@ -71,8 +71,8 @@ EOT
 SHELL ["nrfutil","toolchain-manager","launch","/bin/bash","--","-c"]
 RUN <<EOT
     west init -m https://github.com/nrfconnect/sdk-nrf --mr ${sdk_nrf_version} .
-    if [[ $sdk_nrf_commit =~ "^[a-fA-F0-9]{32}$" ]]; then \
-        git checkout ${sdk_nrf_version}; \
+    if [[ $sdk_nrf_commit =~ "^[a-fA-F0-9]{32}$" ]]; then
+        git checkout ${sdk_nrf_version};
     fi
     west update --narrow -o=--depth=1
 EOT
