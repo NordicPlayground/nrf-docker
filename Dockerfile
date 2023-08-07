@@ -16,6 +16,10 @@ RUN <<EOT
 EOT
 
 # Install toolchain
+# Make nrfutil install in a shared location, because when used with GitHub
+# Actions, the image will be launched with the home dir mounted from the local
+# checkout.
+ENV NRFUTIL_HOME=/usr/local/share/nrfutil
 RUN <<EOT
     wget -q https://developer.nordicsemi.com/.pc-tools/nrfutil/x64-linux/nrfutil
     mv nrfutil /usr/local/bin
