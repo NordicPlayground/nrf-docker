@@ -75,8 +75,8 @@ RUN <<EOT
     west update --narrow -o=--depth=1
 EOT
 
-
-# Launch into build environment
+# Launch into build environment with the passed arguments
 # Currently this is not supported in GitHub Actions
 # See https://github.com/actions/runner/issues/1964
-ENTRYPOINT [ "nrfutil", "toolchain-manager", "launch", "/bin/bash" ]
+ENTRYPOINT [ "nrfutil", "toolchain-manager", "launch", "/bin/bash", "--", "/root/entry.sh" ]
+COPY ./entry.sh /root/entry.sh

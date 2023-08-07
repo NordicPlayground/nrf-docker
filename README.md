@@ -1,7 +1,7 @@
 # Docker image for building nRF Connect SDK applications
 
 ![Publish Docker](https://github.com/NordicPlayground/nrf-docker/workflows/Publish%20Docker/badge.svg?branch=saga)
-(_the [Docker image](https://hub.docker.com/r/nordicplayground/nrfconnect-sdk) is build against [nRF Connect SDK](https://github.com/nrfconnect/sdk-nrf) `main`,`v2.4-branch`,`v2.3-branch`,`v2.2-branch`,`v2.1-branch`,`v2.0-branch`,`v1.9-branch`,`v1.8-branch`, `v1.7-branch`, `v1.6-branch`, and `v1.5-branch` every night._)
+(_the [Docker image](https://hub.docker.com/r/nordicplayground/nrfconnect-sdk) is build against [nRF Connect SDK](https://github.com/nrfconnect/sdk-nrf) `main`,`v2.4-branch`,`v2.3-branch`,`v2.2-branch`,`v2.1-branch`, and `v2.0-branch` every night._)
 
 This project defines a Docker image that contains all dependencies to run `west` commands with the nRF Connect SDK. Bind mount the project folder you'd like to build, and the output will end up in the same folder (nested in build/zephyr subdir of the app).
 
@@ -61,7 +61,7 @@ The rest of the documentation will use the local name `nrfconnect-sdk`, but any 
 
 ### Build the firmware
 
-To demonstrate, we'll build the _asset_tracker_v2_ application from sdk-nrf:
+To demonstrate, we'll build the _asset_tracker_v2_ application from the nRF Connect SDK:
 
 ```bash
 docker run --rm \
@@ -81,7 +81,9 @@ To build a stand-alone project, replace `-w /workdir/nrf/applications/asset_trac
 # run from the build-with-nrf-connect-sdk
 docker run --rm -v ${PWD}:/workdir/project \
     nrfconnect-sdk \
-    west build -p always -b nrf9160dk_nrf9160_ns
+    nrfutil toolchain-manager launch /bin/bash -c '\
+        west build -p always -b nrf9160dk_nrf9160_ns\
+    '
 ```
 
 ## Full example
@@ -153,7 +155,7 @@ to format your sources.
 ## Interactive usage
 
 ```bash
-docker run -it --name nrfconnect-sdk -v ${PWD}:/workdir/project \
+docker run -it -v ${PWD}:/workdir/project \
     nrfconnect-sdk /bin/bash
 ```
 
