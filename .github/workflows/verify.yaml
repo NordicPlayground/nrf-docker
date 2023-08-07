@@ -6,69 +6,26 @@ jobs:
   build:
     strategy:
       matrix:
-        ncs_branch:
+        sdk_nrf_branch:
           - main
           - v2.4-branch
           - v2.3-branch
           - v2.2-branch
           - v2.1-branch
           - v2.0-branch
-          - v1.9-branch
-          - v1.8-branch
-          - v1.7-branch
-          - v1.6-branch
-          - v1.5-branch
         include:
-          # Defaults
-          - ZEPHYR_TOOLCHAIN_VERSION: 0.16.0
-            ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT: xz
-            # Removed in v1.9
-            asset_tracker: disable
-            asset_tracker_v2: enable
-
-          - ncs_branch: v2.4-branch
-
-          - ncs_branch: v2.3-branch
-            ZEPHYR_TOOLCHAIN_VERSION: 0.15.2
-            ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT: gz
-
-          - ncs_branch: v2.2-branch
-            ZEPHYR_TOOLCHAIN_VERSION: 0.15.1
-            ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT: gz
-
-          - ncs_branch: v2.1-branch
-            ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
-            ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT: gz
-
-          - ncs_branch: v2.0-branch
-            ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
-            ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT: gz
-
-          - ncs_branch: v1.9-branch
-            ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
-            ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT: gz
-
-          - ncs_branch: v1.8-branch
-            ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
-            ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT: gz
-            asset_tracker: enable
-
-          - ncs_branch: v1.7-branch
-            ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
-            ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT: gz
-            asset_tracker: enable
-
-          - ncs_branch: v1.6-branch
-            ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
-            ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT: gz
-            asset_tracker: enable
-
-          - ncs_branch: v1.5-branch
-            ZEPHYR_TOOLCHAIN_VERSION: 0.14.1
-            ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT: gz
-            # asset_tracker_v2 needs configuration in 1.5
-            asset_tracker_v2: disable
-            asset_tracker: enable
+          - sdk_nrf_branch: main
+            toolchain_version: v2.4.1
+          - sdk_nrf_branch: v2.4-branch
+            toolchain_version: v2.4.1
+          - sdk_nrf_branch: v2.3-branch
+            toolchain_version: v2.3.0
+          - sdk_nrf_branch: v2.2-branch
+            toolchain_version: v2.2.0
+          - sdk_nrf_branch: v2.1-branch
+            toolchain_version: v2.1.3
+          - sdk_nrf_branch: v2.0-branch
+            toolchain_version: v2.0.2
 
     runs-on: ubuntu-latest
     steps:
@@ -76,56 +33,31 @@ jobs:
 
       - name: Build image
         run: |
-          docker build -t nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
-            --build-arg sdk_nrf_revision=${{ matrix.ncs_branch }} \
-            --build-arg ZEPHYR_TOOLCHAIN_VERSION=${{ matrix.ZEPHYR_TOOLCHAIN_VERSION }} \
-            --build-arg ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT=${{ matrix.ZEPHYR_TOOLCHAIN_ARCHIVE_FORMAT }} \
+          docker build -t nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} \
+            --build-arg sdk_nrf_branch=${{ matrix.sdk_nrf_branch }} \
+            --build-arg toolchain_version=${{ matrix.toolchain_version }} \
             .
 
-      - name: Build asset_tracker application
-        if: matrix.asset_tracker != 'disable'
-        run: |
-          docker run --rm \
-            -v ${PWD}:/workdir/project \
-            -w /workdir/nrf/applications/asset_tracker \
-            nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
-              west build -b nrf9160dk_nrf9160ns --build-dir /workdir/project/build -- -DEXTRA_CFLAGS="-Werror -Wno-dev"
-
-      - uses: actions/upload-artifact@v3
-        if: matrix.asset_tracker != 'disable'
-        with:
-          if-no-files-found: error
-          name: asset_tracker-${{ matrix.ncs_branch }}
-          path: |
-            build/zephyr/merged.hex
-            build/zephyr/app_update.bin
-
       - name: Build asset_tracker_v2 application
-        if: matrix.asset_tracker_v2 != 'disable'
         run: |
           docker run --rm \
             -v ${PWD}:/workdir/project \
             -w /workdir/nrf/applications/asset_tracker_v2 \
-            nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} \
+            nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} \
               west build -b nrf9160dk_nrf9160ns --build-dir /workdir/project/build -- -DEXTRA_CFLAGS="-Werror -Wno-dev"
 
       - uses: actions/upload-artifact@v3
-        if: matrix.asset_tracker_v2 != 'disable'
         with:
           if-no-files-found: error
-          name: asset_tracker_v2-${{ matrix.ncs_branch }}
+          name: asset_tracker_v2-${{ matrix.sdk_nrf_branch }}
           path: |
             build/zephyr/merged.hex
             build/zephyr/app_update.bin
 
-      - name: Ensure nrfutil works
-        run: |
-          docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} nrfutil version
-
       - name: Ensure nrfjprog works
         run: |
-          docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} nrfjprog -v
+          docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} nrfjprog -v
 
       - name: Ensure clang-format works
         run: |
-          docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.ncs_branch }} clang-format --version
+          docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} clang-format --version
