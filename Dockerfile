@@ -74,3 +74,9 @@ RUN <<EOT
     fi
     west update --narrow -o=--depth=1
 EOT
+
+
+# Launch into build environment
+# Currently this is not supported in GitHub Actions
+# See https://github.com/actions/runner/issues/1964
+ENTRYPOINT [ "nrfutil", "toolchain-manager", "launch", "/bin/bash" ]
