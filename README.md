@@ -81,9 +81,7 @@ To build a stand-alone project, replace `-w /workdir/nrf/applications/asset_trac
 # run from the build-with-nrf-connect-sdk
 docker run --rm -v ${PWD}:/workdir/project \
     nrfconnect-sdk \
-    nrfutil toolchain-manager launch /bin/bash -c '\
-        west build -p always -b nrf9160dk_nrf9160_ns\
-    '
+    west build -p always -b nrf9160dk_nrf9160_ns\
 ```
 
 ## Full example

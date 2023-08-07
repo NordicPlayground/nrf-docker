@@ -44,9 +44,7 @@ jobs:
             -v ${PWD}:/workdir/project \
             -w /workdir/nrf/applications/asset_tracker_v2 \
             nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} \
-              nrfutil toolchain-manager launch /bin/bash -- -c '\
-                west build -b nrf9160dk_nrf9160ns --build-dir /workdir/project/build -- -DEXTRA_CFLAGS="-Werror -Wno-dev"
-              '
+              west build -b nrf9160dk_nrf9160ns --build-dir /workdir/project/build -- -DEXTRA_CFLAGS="-Werror -Wno-dev"
 
       - uses: actions/upload-artifact@v3
         with:
