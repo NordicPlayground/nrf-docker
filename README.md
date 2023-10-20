@@ -3,6 +3,8 @@
 ![Publish Docker](https://github.com/NordicPlayground/nrf-docker/workflows/Publish%20Docker/badge.svg?branch=saga)
 (_the [Docker image](https://hub.docker.com/r/nordicplayground/nrfconnect-sdk) is build against [nRF Connect SDK](https://github.com/nrfconnect/sdk-nrf) `main`,`v2.4-branch`,`v2.3-branch`,`v2.2-branch`,`v2.1-branch`, and `v2.0-branch` every night._)
 
+![Docker + Zephyr -> merged.hex](./diagram.png)
+
 This project defines a Docker image that contains all dependencies to run `west` commands with the nRF Connect SDK. Bind mount the project folder you'd like to build, and the output will end up in the same folder (nested in build/zephyr subdir of the app).
 
 The aim is to provide a Docker image that can compile application and samples in a [nRF Connect SDK](https://github.com/nrfconnect/sdk-nrf) release branch, not to exactly replicate the software configuration used when the release was made.
@@ -11,16 +13,13 @@ More specificially, the purpose of this project is _not_ to provide stable image
 
 However, provisioning an environment with the toolchain and an updated west environment still takes considerable time (around 10 minutes). Especially with matrix builds this will quickly add up. Therefore this project shows how to dockerize a ready-to-use `west build` command.
 
-> [!NOTE]
-> Read more about this aproach [here](https://devzone.nordicsemi.com/nordic/nrf-connect-sdk-guides/b/getting-started/posts/build-ncs-application-firmware-images-using-docker).
-
 If you want stable Docker images, use the [Dockerfile](./Dockerfile) in this repository as an example to build your own Docker image.
 
-![Docker + Zephyr -> merged.hex](./diagram.png)
-
-Install `docker` on your operating system. On Windows you might want to use the [WSL subsystem](https://docs.docker.com/docker-for-windows/wsl-tech-preview/).
+For Matter samples, check out [nrfconnect-chip-docker](https://github.com/NordicPlayground/nrfconnect-chip-docker/).
 
 ## Setup
+
+Install `docker` on your operating system. On Windows you might want to use the [WSL subsystem](https://docs.docker.com/docker-for-windows/wsl-tech-preview/).
 
 You can either build the image from this repository or use a pre-built one from Dockerhub.
 
