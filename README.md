@@ -15,7 +15,7 @@ However, provisioning an environment with the toolchain and an updated west envi
 
 If you want stable Docker images, use the [Dockerfile](./Dockerfile) in this repository as an example to build your own Docker image.
 
-For Matter samples, check out [nrfconnect-chip-docker](https://github.com/NordicPlayground/nrfconnect-chip-docker/).
+For Matter applications, check out [nrfconnect-chip-docker](https://github.com/NordicPlayground/nrfconnect-chip-docker/).
 
 ## Setup
 
