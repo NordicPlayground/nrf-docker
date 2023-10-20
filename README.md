@@ -127,20 +127,6 @@ cp build/zephyr/zephyr.hex peripheral_ht.hex
 ls -la ./peripheral_ht.hex
 ```
 
-## Flashing
-
-> [!NOTE]
-> Docker for Mac OS and Windows does not have support for USB yet, so this will only work on Linux computers.
-
-```bash
-# assumes asset_tracker_v2 built already (see above)
-docker run --rm \
-    -w /workdir/nrf/applications/asset_tracker_v2 \
-    --device=/dev/ttyACM0 --privileged \
-    nrfconnect-sdk \
-    west flash
-```
-
 ## ClangFormat
 
 The image comes with [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html) and the [nRF Connect SDK formatting rules](https://github.com/nrfconnect/sdk-nrf/blob/main/.clang-format) so you can run for example
@@ -168,20 +154,15 @@ docker run -it -v ${PWD}:/workdir/project \
     nrfconnect-sdk /bin/bash
 ```
 
-> [!NOTE]
-> On Linux add `--device=/dev/ttyACM0 --privileged` to be able to flash from the Docker container.
-
 Then, inside the container:
 
 ```bash
 cd nrf/applications/asset_tracker_v2
 west build -p always -b nrf9160dk_nrf9160_ns
-west flash # only works on linux - use nrf desktop tools on Windows/Mac OS
-west build
 ...
 ```
 
-Meanwhile, inside or outside of the container, you may modify the code and repeat the build/flash cycle.
+Meanwhile, outside of the container, you may modify the code and repeat the build cycle.
 
 Later after closing the container you may re-open it by name to continue where you left off:
 
