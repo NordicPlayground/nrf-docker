@@ -7,11 +7,12 @@ This project defines a Docker image that contains all dependencies to run `west`
 
 The aim is to provide a Docker image that can compile application and samples in a [nRF Connect SDK](https://github.com/nrfconnect/sdk-nrf) release branch, not to exactly replicate the software configuration used when the release was made.
 
-More specificially, the purpose of this project is _not_ to provide stable images, but replicate what users are facing when they start developing with nRF Connect SDK (which itself does not provide a reproducible build environment). This is mitigated by the [Toolchain Manager](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/nrf/installation/assistant.html#install-toolchain-manager), which is available for command line usage. 
+More specificially, the purpose of this project is _not_ to provide stable images, but replicate what users are facing when they start developing with nRF Connect SDK (which itself does not provide a reproducible build environment). This is mitigated by the [Toolchain Manager](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/nrf/installation/assistant.html#install-toolchain-manager), which is available for command line usage.
 
 However, provisioning an environment with the toolchain and an updated west environment still takes considerable time (around 10 minutes). Especially with matrix builds this will quickly add up. Therefore this project shows how to dockerize a ready-to-use `west build` command.
 
-> ℹ️ Read more about this aproach [here](https://devzone.nordicsemi.com/nordic/nrf-connect-sdk-guides/b/getting-started/posts/build-ncs-application-firmware-images-using-docker).
+> [!NOTE]
+> Read more about this aproach [here](https://devzone.nordicsemi.com/nordic/nrf-connect-sdk-guides/b/getting-started/posts/build-ncs-application-firmware-images-using-docker).
 
 If you want stable Docker images, use the [Dockerfile](./Dockerfile) in this repository as an example to build your own Docker image.
 
@@ -38,13 +39,16 @@ cd nrf-docker
 docker build -t nrfconnect-sdk --build-arg sdk_nrf_version=v2.4-branch .
 ```
 
-> 🍏 _Note:_ To build for a Mac with the M1 architecture, you need to specify the `arm64` architecture when building: `--build-arg arch=arm64`.
+> [!NOTE]
+> To build for a Mac with the M1 architecture, you need to specify the `arm64` architecture when building: `--build-arg arch=arm64`.
 
-> ℹ️ The `sdk_nrf_version` build argument can be used to specify what version of the nRF Connect SDK that will be used when looking up dependencies with pip for the SDK and it's west dependency repositories. The value can be a git _tag_, _branch_ or _sha_ from the [nRF Connect SDK repository](https://github.com/nrfconnect/sdk-nrf).
+> [!NOTE]
+> The `sdk_nrf_version` build argument can be used to specify what version of the nRF Connect SDK that will be used when looking up dependencies with pip for the SDK and it's west dependency repositories. The value can be a git _tag_, _branch_ or _sha_ from the [nRF Connect SDK repository](https://github.com/nrfconnect/sdk-nrf).
 
 ### Use pre-built image from Dockerhub
 
-> ℹ️ This is a convenient way to quickly build your firmware but using images from untrusted third-parties poses the risk of exposing your source code.
+> [!NOTE]
+> This is a convenient way to quickly build your firmware but using images from untrusted third-parties poses the risk of exposing your source code.
 > There is no guarantee (e.g. cryptographic signature) about what this image contains.
 > When publishing the image this project only ensures through automation that it can be used to build nRF Connect SDK examples.
 > The entire image creation and publication is automated (build on GitHub Actions, and served by Dockerhub), which means there are multiple systems that can be compromised, during and after publication.
@@ -53,7 +57,8 @@ docker build -t nrfconnect-sdk --build-arg sdk_nrf_version=v2.4-branch .
 > At build time, dependencies are fetched from third-party sources and installed. These dependencies could also contain malicious code.
 > If you are using this image you must be aware that you are using software from many untrusted sources with all the consequences that brings.
 
-> 🍏 _Note:_ The prebuilt images are not available for `arm64` architecture (Apple M1), because GitHub Actions don't have hosted runners with Apple M1 yet.
+> [!NOTE]
+> The prebuilt images are not available for `arm64` architecture (Apple M1), because GitHub Actions don't have hosted runners with Apple M1 yet.
 
 To use the pre-built image [`nordicplayground/nrfconnect-sdk:main`](https://hub.docker.com/r/nordicplayground/nrfconnect-sdk); add `nordicplayground/` before the image name and `:tag` after. Replace `tag` with one of the [available tags](https://hub.docker.com/r/nordicplayground/nrfconnect-sdk/tags) on the Dockerhub image. The only difference between the tags are which Python dependencies are pre-installed in the image based on the different `requirements.txt` files from the nRF Connect SDK repository's west dependencies.
 
@@ -77,7 +82,8 @@ docker run --rm \
 
 The firmware file will be located here: `nrf/applications/asset_tracker_v2/build/zephyr/merged.hex`. Because it's inside the folder that is bind mounted when running the image, it is also available outside of the Docker image.
 
-> ℹ️ The `-p always` build argument is to do a pristine build. It is similar to cleaning the build folder and is used because it is less error-prone to a previous build with different configuration. To speed up subsequent build with the same configuration you can remove this argument to avoid re-building code that haven't been modified since the previous build.
+> [!NOTE]
+> The `-p always` build argument is to do a pristine build. It is similar to cleaning the build folder and is used because it is less error-prone to a previous build with different configuration. To speed up subsequent build with the same configuration you can remove this argument to avoid re-building code that haven't been modified since the previous build.
 
 To build a stand-alone project, replace `-w /workdir/nrf/applications/asset_tracker_v2` with the name of the applications folder inside the docker container:
 
@@ -124,7 +130,8 @@ ls -la ./peripheral_ht.hex
 
 ## Flashing
 
-> ℹ️ Docker for Mac OS and Windows does not have support for USB yet, so this will only work on Linux computers.
+> [!NOTE]
+> Docker for Mac OS and Windows does not have support for USB yet, so this will only work on Linux computers.
 
 ```bash
 # assumes asset_tracker_v2 built already (see above)
@@ -152,7 +159,8 @@ docker rm nrfconnect-sdk
 
 to format your sources.
 
-> ℹ️ Instead of having `clang-format` overwrite the source code file itself, the above command passes the source code file on stdin to clang-format and then overwrites it outside of the container. Otherwise the overwritten file will be owner by the root user (because the Docker daemon is run as root).
+> [!NOTE]
+> Instead of having `clang-format` overwrite the source code file itself, the above command passes the source code file on stdin to clang-format and then overwrites it outside of the container. Otherwise the overwritten file will be owner by the root user (because the Docker daemon is run as root).
 
 ## Interactive usage
 
@@ -161,7 +169,8 @@ docker run -it -v ${PWD}:/workdir/project \
     nrfconnect-sdk /bin/bash
 ```
 
-> ℹ️ On Linux add `--device=/dev/ttyACM0 --privileged` to be able to flash from the Docker container.
+> [!NOTE]
+> On Linux add `--device=/dev/ttyACM0 --privileged` to be able to flash from the Docker container.
 
 Then, inside the container:
 
