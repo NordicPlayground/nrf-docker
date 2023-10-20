@@ -59,6 +59,14 @@ jobs:
             build/zephyr/merged.hex
             build/zephyr/app_update.bin
 
+      - name: Ensure matter sample light_bulb can be built as well
+        run: |
+          docker run --rm \
+            -v ${PWD}:/workdir/project \
+            -w /workdir/nrf/samples/matter/light_bulb \
+            nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} \
+              west build -b nrf52840dk_nrf52840 --build-dir /workdir/project/build -- -DEXTRA_CFLAGS="-Werror -Wno-dev"
+
       - name: Ensure nrfjprog works
         run: |
           docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} nrfjprog -v

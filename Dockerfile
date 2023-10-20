@@ -84,3 +84,44 @@ EOT
 # See https://github.com/actions/runner/issues/1964
 ENTRYPOINT [ "nrfutil", "toolchain-manager", "launch", "/bin/bash", "--", "/root/entry.sh" ]
 COPY ./entry.sh /root/entry.sh
+
+###########################
+# Additional tools for CHIP/matter
+# from https://github.com/NordicPlayground/nrfconnect-chip-docker/blob/master/nrfconnect-chip/Dockerfile
+###########################
+ARG GN_BUILD_URL="https://chrome-infra-packages.appspot.com/dl/gn/gn/linux-amd64/+/latest"
+ENV ZAP_VERSION v2023.05.04
+ENV ZAP_INSTALL_PATH /var/zap/${ZAP_VERSION}
+
+RUN <<EOT
+    apt-get -y install python-is-python3
+    apt-get -y install libpython3-dev python3-venv
+    apt-get -y install autoconf libtool
+    apt-get -y install g++ g++-multilib
+    apt-get -y install nano screen curl git
+EOT
+
+RUN <<EOT
+    apt-get -y install libssl-dev libffi7
+    apt-get -y install libavahi-client-dev
+    apt-get -y install libgirepository-1.0-1
+EOT
+
+RUN <<EOT
+    curl -L -o /tmp/gn.zip ${GN_BUILD_URL} \
+    && python3 -c "from zipfile import *; ZipFile('/tmp/gn.zip').extract('gn', '/usr/bin')" \
+    && chmod +x /usr/bin/gn
+EOT
+
+RUN <<EOT
+    pip install --upgrade pip
+    python3 -m pip install --no-cache-dir lark
+    python3 -m pip install --no-cache-dir stringcase
+EOT
+
+RUN <<EOT
+    mkdir -p $ZAP_INSTALL_PATH \
+    && curl -L https://github.com/project-chip/zap/releases/download/$ZAP_VERSION/zap-linux.zip --output $ZAP_INSTALL_PATH/zap-linux.zip \
+    && unzip $ZAP_INSTALL_PATH/zap-linux.zip zap-cli -d $ZAP_INSTALL_PATH \
+    && rm $ZAP_INSTALL_PATH/zap-linux.zip
+EOT
