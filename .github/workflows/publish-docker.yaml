@@ -13,6 +13,7 @@ jobs:
       matrix:
         sdk_nrf_branch:
           - main
+          - v2.5-branch
           - v2.4-branch
           - v2.3-branch
           - v2.2-branch
@@ -20,7 +21,9 @@ jobs:
           - v2.0-branch
         include:
           - sdk_nrf_branch: main
-            toolchain_version: v2.4.1
+            toolchain_version: v2.5.0
+          - sdk_nrf_branch: v2.5-branch
+            toolchain_version: v2.5.0
           - sdk_nrf_branch: v2.4-branch
             toolchain_version: v2.4.1
           - sdk_nrf_branch: v2.3-branch
