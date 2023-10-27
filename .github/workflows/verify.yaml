@@ -16,7 +16,7 @@ jobs:
           - v2.0-branch
         include:
           - sdk_nrf_branch: main
-            toolchain_version: main
+            toolchain_version: v2.5.0
           - sdk_nrf_branch: v2.5-branch
             toolchain_version: v2.5.0
           - sdk_nrf_branch: v2.4-branch
