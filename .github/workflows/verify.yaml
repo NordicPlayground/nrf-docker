@@ -5,6 +5,8 @@ on: pull_request
 jobs:
   build:
     strategy:
+      # Don't overwhelm the toolchain server
+      max-parallel: 1
       matrix:
         sdk_nrf_branch:
           - main
