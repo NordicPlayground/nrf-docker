@@ -10,6 +10,7 @@ ARG arch=amd64
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN <<EOT
+    set -euxo pipefail
     apt-get -y update
     apt-get -y upgrade
     apt-get -y install wget unzip
@@ -21,6 +22,7 @@ EOT
 # checkout.
 ENV NRFUTIL_HOME=/usr/local/share/nrfutil
 RUN <<EOT
+    set -euxo pipefail
     wget -q https://developer.nordicsemi.com/.pc-tools/nrfutil/x64-linux/nrfutil
     mv nrfutil /usr/local/bin
     chmod +x /usr/local/bin/nrfutil
@@ -34,6 +36,7 @@ EOT
 # ClangFormat
 #
 RUN <<EOT
+    set -euxo pipefail
     apt-get -y install clang-format
     wget -qO- https://raw.githubusercontent.com/nrfconnect/sdk-nrf/${sdk_nrf_branch}/.clang-format > /workdir/.clang-format
 EOT
@@ -41,6 +44,7 @@ EOT
 # Nordic command line tools
 # Releases: https://www.nordicsemi.com/Products/Development-tools/nrf-command-line-tools/download
 RUN <<EOT
+    set -euxo pipefail
     NCLT_BASE=https://nsscprodmedia.blob.core.windows.net/prod/software-and-other-downloads/desktop-software/nrf-command-line-tools/sw/versions-10-x-x
     echo "Host architecture: $arch"
     case $arch in
@@ -72,6 +76,7 @@ EOT
 # Prepare image with a ready to use build environment
 SHELL ["nrfutil","toolchain-manager","launch","/bin/bash","--","-c"]
 RUN <<EOT
+    set -euxo pipefail
     west init -m https://github.com/nrfconnect/sdk-nrf --mr ${sdk_nrf_branch} .
     if [[ $sdk_nrf_commit =~ "^[a-fA-F0-9]{32}$" ]]; then
         git checkout ${sdk_nrf_commit};
