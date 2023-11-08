@@ -9,6 +9,8 @@ ARG arch=amd64
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+SHELL [ "/bin/bash" ]
+
 RUN <<EOT
     set -euxo pipefail
     apt-get -y update
