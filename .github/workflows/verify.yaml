@@ -66,3 +66,7 @@ jobs:
       - name: Ensure clang-format works
         run: |
           docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} clang-format --version
+
+      - name: Ensure native_sim works
+        run: |
+          docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} west build -b native_sim zephyr/samples/hello_world
