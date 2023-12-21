@@ -8,29 +8,34 @@ jobs:
       # Don't overwhelm the toolchain server
       max-parallel: 1
       matrix:
-        sdk_nrf_branch:
-          - main
-          - v2.5-branch
-          - v2.4-branch
-          - v2.3-branch
-          - v2.2-branch
-          - v2.1-branch
-          - v2.0-branch
         include:
           - sdk_nrf_branch: main
             toolchain_version: v2.5.0
+            native_board: native_sim
+
           - sdk_nrf_branch: v2.5-branch
             toolchain_version: v2.5.0
+            native_board: native_sim
+
           - sdk_nrf_branch: v2.4-branch
             toolchain_version: v2.4.1
+            native_board: native_posix
+
           - sdk_nrf_branch: v2.3-branch
             toolchain_version: v2.3.0
+            native_board: native_posix
+
           - sdk_nrf_branch: v2.2-branch
             toolchain_version: v2.2.0
+            native_board: native_posix
+
           - sdk_nrf_branch: v2.1-branch
             toolchain_version: v2.1.3
+            native_board: native_posix
+
           - sdk_nrf_branch: v2.0-branch
             toolchain_version: v2.0.2
+            native_board: native_posix
 
     runs-on: ubuntu-latest
     steps:
@@ -66,3 +71,7 @@ jobs:
       - name: Ensure clang-format works
         run: |
           docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} clang-format --version
+
+      - name: Ensure native build works
+        run: |
+          docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} west build -b ${{ matrix.native_board }} zephyr/samples/hello_world

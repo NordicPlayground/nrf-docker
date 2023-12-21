@@ -40,6 +40,13 @@ RUN <<EOT
     wget -qO- https://raw.githubusercontent.com/nrfconnect/sdk-nrf/${sdk_nrf_branch}/.clang-format > /workdir/.clang-format
 EOT
 
+#
+# Host tools for native_sim build
+#
+RUN <<EOT
+    apt-get -y install gcc-multilib make
+EOT
+
 # Nordic command line tools
 # Releases: https://www.nordicsemi.com/Products/Development-tools/nrf-command-line-tools/download
 RUN <<EOT
