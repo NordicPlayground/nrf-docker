@@ -88,6 +88,9 @@ RUN <<EOT
     west update --narrow -o=--depth=1
 EOT
 
+# The ZEPHYR_BASE variable is not set by nrfutil
+ENV ZEPHYR_BASE=/workdir/zephyr
+
 # Launch into build environment with the passed arguments
 # Currently this is not supported in GitHub Actions
 # See https://github.com/actions/runner/issues/1964
