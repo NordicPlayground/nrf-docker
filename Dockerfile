@@ -14,7 +14,7 @@ SHELL [ "/bin/bash", "-euxo", "pipefail", "-c" ]
 RUN <<EOT
     apt-get -y update
     apt-get -y upgrade
-    apt-get -y install wget unzip
+    apt-get -y install wget unzip curl
 EOT
 
 # Install toolchain
