@@ -47,6 +47,13 @@ RUN <<EOT
     apt-get -y install gcc-multilib make
 EOT
 
+#
+# python 3.8 is installed by toolchain manager hence older version of libffi is required
+#
+RUN <<EOT
+    apt-get -y install libffi7
+EOT
+
 # Nordic command line tools
 # Releases: https://www.nordicsemi.com/Products/Development-tools/nrf-command-line-tools/download
 RUN <<EOT
