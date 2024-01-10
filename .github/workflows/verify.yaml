@@ -78,4 +78,4 @@ jobs:
 
       - name: Ensure zephyr twister unit tests works
         run: |
-          docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} west twister -p ${{ matrix.native_board }} -T zephyr/samples/subsys/testsuite/integration
+          docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} ./zephyr/scripts/twister -p ${{ matrix.native_board }} -T zephyr/samples/subsys/testsuite/integration
