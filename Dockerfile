@@ -30,6 +30,7 @@ RUN <<EOT
     nrfutil install toolchain-manager search
     nrfutil toolchain-manager install --ncs-version ${toolchain_version}
     nrfutil toolchain-manager list
+    rm -f /root/ncs/downloads/*
 EOT
 
 #
