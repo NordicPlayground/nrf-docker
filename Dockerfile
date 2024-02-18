@@ -11,10 +11,14 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 SHELL [ "/bin/bash", "-euxo", "pipefail", "-c" ]
 
+# gcc-multilib make = Host tools for native_sim build
+# python 3.8 is installed by toolchain manager hence older version of libffi is required
 RUN <<EOT
     apt-get -y update
     apt-get -y upgrade
-    apt-get -y install wget unzip
+    apt-get -y install wget unzip clang-format gcc-multilib make libffi7
+    apt-get -y clean
+    rm -rf /var/lib/apt/lists/*
 EOT
 
 # Install toolchain
@@ -37,22 +41,7 @@ EOT
 # ClangFormat
 #
 RUN <<EOT
-    apt-get -y install clang-format
     wget -qO- https://raw.githubusercontent.com/nrfconnect/sdk-nrf/${sdk_nrf_branch}/.clang-format > /workdir/.clang-format
-EOT
-
-#
-# Host tools for native_sim build
-#
-RUN <<EOT
-    apt-get -y install gcc-multilib make
-EOT
-
-#
-# python 3.8 is installed by toolchain manager hence older version of libffi is required
-#
-RUN <<EOT
-    apt-get -y install libffi7
 EOT
 
 # Nordic command line tools
