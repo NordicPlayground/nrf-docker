@@ -4,7 +4,7 @@ WORKDIR /workdir
 ARG sdk_nrf_branch=v2.5-branch
 ARG toolchain_version=v2.5.0
 ARG sdk_nrf_commit
-ARG NORDIC_COMMAND_LINE_TOOLS_VERSION="10-23-2/nrf-command-line-tools-10.23.2"
+ARG NORDIC_COMMAND_LINE_TOOLS_VERSION="10-24-0/nrf-command-line-tools-10.24.0"
 ARG arch=amd64
 
 ENV DEBIAN_FRONTEND=noninteractive
