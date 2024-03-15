@@ -17,6 +17,8 @@ If you want stable Docker images or have custom needs, use the [Dockerfile](./Do
 
 For Matter applications, check out [nrfconnect-chip-docker](https://github.com/NordicPlayground/nrfconnect-chip-docker/).
 
+For Zephyr applications, check out the [Zephyr Docker images](https://github.com/zephyrproject-rtos/docker-image/pkgs/container/ci#zephyr-docker-images).
+
 ## Setup
 
 Install `docker` on your operating system. On Windows you might want to use the [WSL subsystem](https://docs.docker.com/docker-for-windows/wsl-tech-preview/).
