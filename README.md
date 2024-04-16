@@ -59,7 +59,7 @@ docker build -t nrfconnect-sdk --build-arg sdk_nrf_version=v2.6-branch .
 > If you are using this image you must be aware that you are using software from many untrusted sources with all the consequences that brings.
 
 > [!NOTE]
-> The prebuilt images are not available for `arm64` architecture (Apple M1), because GitHub Actions don't have hosted runners with Apple M1 yet.
+> The prebuilt images are only available for `amd64` architecture (Linux).
 
 To use the pre-built image [`nordicplayground/nrfconnect-sdk:main`](https://hub.docker.com/r/nordicplayground/nrfconnect-sdk); add `nordicplayground/` before the image name and `:tag` after. Replace `tag` with one of the [available tags](https://hub.docker.com/r/nordicplayground/nrfconnect-sdk/tags) on the Dockerhub image. The only difference between the tags are which Python dependencies are pre-installed in the image based on the different `requirements.txt` files from the nRF Connect SDK repository's west dependencies.
 
