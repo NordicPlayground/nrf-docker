@@ -50,12 +50,6 @@ jobs:
           buildkitd-flags: --debug
           platforms: linux/amd64,linux/arm64 # Specify platforms here
 
-      - name: Build image
-        run: |
-          docker build -t nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} \
-            --build-arg sdk_nrf_branch=${{ matrix.sdk_nrf_branch }} \
-            --build-arg toolchain_version=${{ matrix.toolchain_version }} \
-
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Log in to the Container registry
