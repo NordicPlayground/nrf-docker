@@ -1,94 +1,118 @@
 name: Publish Docker
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
 on:
   push:
     branches:
       - saga
-  schedule:
-    - cron: "0 0 * * *"
+      - main
   workflow_dispatch:
 
 jobs:
-  build:
+  build-and-push:
     strategy:
       # Don't overwhelm the toolchain server
       max-parallel: 1
       matrix:
         include:
-          - sdk_nrf_branch: main
-            toolchain_version: v2.6.0
-            native_board: native_sim
-
+          #Build for linux amd64
           - sdk_nrf_branch: v2.6-branch
             toolchain_version: v2.6.0
+            # Optional, if you want to use a specific the commit
+            # sdk_nrf_commit: 
+            NORDIC_COMMAND_LINE_TOOLS_VERSION: "10-24-0/nrf-command-line-tools-10.24.0"
+            arch: amd64
             native_board: native_sim
-
-          - sdk_nrf_branch: v2.5-branch
-            toolchain_version: v2.5.0
-            native_board: native_sim
-
-          - sdk_nrf_branch: v2.4-branch
-            toolchain_version: v2.4.1
-            native_board: native_posix
-
-          - sdk_nrf_branch: v2.3-branch
-            toolchain_version: v2.3.0
-            native_board: native_posix
-
-          - sdk_nrf_branch: v2.2-branch
-            toolchain_version: v2.2.0
-            native_board: native_posix
+        #  #Build for linux arm64
+        #   - sdk_nrf_branch: v2.6-branch
+        #     toolchain_version: v2.6.0
+        #     # Optional, if you want to use a specific the commit
+        #     # sdk_nrf_commit: 
+        #     NORDIC_COMMAND_LINE_TOOLS_VERSION: "10-24-0/nrf-command-line-tools-10.24.0"
+        #     arch: arm64
 
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          buildkitd-flags: --debug
+          platforms: linux/amd64,linux/arm64 # Specify platforms here
 
       - name: Build image
         run: |
           docker build -t nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} \
             --build-arg sdk_nrf_branch=${{ matrix.sdk_nrf_branch }} \
             --build-arg toolchain_version=${{ matrix.toolchain_version }} \
-            .
 
-      - name: Build asset_tracker_v2 application
-        run: |
-          docker run --rm \
-            -v ${PWD}:/workdir/project \
-            -w /workdir/nrf/applications/asset_tracker_v2 \
-            nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} \
-              west build -b nrf9160dk_nrf9160_ns --build-dir /workdir/project/build -- -DEXTRA_CFLAGS="-Werror -Wno-dev"
-
-      - uses: actions/upload-artifact@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3.1.0
         with:
-          if-no-files-found: error
-          name: asset_tracker_v2-${{ matrix.sdk_nrf_branch }}
-          path: |
-            build/zephyr/merged.hex
-            build/zephyr/app_update.bin
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5.5.1
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      - name: Downcase image name
+        run: echo "IMAGE_NAME_LOWERCASE=${IMAGE_NAME,,}" >> ${GITHUB_ENV}
+
+      - name: Build and export to Docker
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          load: true
+          file: Dockerfile
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWERCASE }}:${{ matrix.sdk_nrf_branch }}
+          build-args: |
+            sdk_nrf_branch=${{ matrix.sdk_nrf_branch }}
+            toolchain_version=${{ matrix.toolchain_version }}
+
 
       - name: Ensure nrfjprog works
         run: |
-          docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} nrfjprog -v
+          docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWERCASE }}:${{ matrix.sdk_nrf_branch }} nrfjprog -v
 
       - name: Ensure clang-format works
         run: |
-          docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} clang-format --version
+          docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWERCASE }}:${{ matrix.sdk_nrf_branch }} clang-format --version
 
       - name: Ensure native build works
         run: |
-          docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} west build -b ${{ matrix.native_board }} zephyr/samples/hello_world
+          docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWERCASE }}:${{ matrix.sdk_nrf_branch }} west build -b ${{ matrix.native_board }} zephyr/samples/hello_world
 
       - name: Ensure zephyr twister unit tests works
         run: |
-          docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} ./zephyr/scripts/twister -p ${{ matrix.native_board }} -T zephyr/samples/subsys/testsuite/integration
+          docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWERCASE }}:${{ matrix.sdk_nrf_branch }} ./zephyr/scripts/twister -p ${{ matrix.native_board }} -T zephyr/samples/subsys/testsuite/integration
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
         with:
-          username: nordicplayground
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Publish image
-        run: |
-          docker images
-          docker push nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }}
+          context: .
+          file: Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWERCASE }}:${{ matrix.sdk_nrf_branch }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWERCASE }}:latest
+          platforms: linux/amd64,linux/arm64 # Specify platforms here
+          load: false # Should be false when pushing to a registry
+          labels: ${{ steps.meta.outputs.labels }}
+  
+  
