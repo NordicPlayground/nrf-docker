@@ -48,7 +48,9 @@ jobs:
         uses: docker/setup-buildx-action@v3
         with:
           buildkitd-flags: --debug
-          platforms: linux/amd64,linux/arm64 # Specify platforms here
+          # platforms: linux/amd64,linux/arm64 # Specify platforms here
+          platforms: linux/amd64 # Specify platforms here
+
 
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -105,7 +107,8 @@ jobs:
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWERCASE }}:${{ matrix.sdk_nrf_branch }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWERCASE }}:latest
-          platforms: linux/amd64,linux/arm64 # Specify platforms here
+          #platforms: linux/amd64,linux/arm64 # Specify platforms here
+          platforms: linux/amd64 # Specify platforms here
           load: false # Should be false when pushing to a registry
           labels: ${{ steps.meta.outputs.labels }}
   
