@@ -35,7 +35,7 @@ jobs:
     - name: Build and export to Docker
       uses: docker/build-push-action@v5
       with:
-        context: .
+        #context: .
         load: true
         file: Dockerfile
         tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWERCASE }}:${{ matrix.sdk_nrf_branch }}
@@ -62,7 +62,7 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v5
       with:
-        context: .
+        #context: .
         file: Dockerfile
         push: true
         tags: |
