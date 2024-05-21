@@ -4,6 +4,14 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
+  sdk_nrf_branch: v2.6-branch
+  toolchain_version: v2.6.0
+  # Optional, if you want to use a specific the commit
+  # sdk_nrf_commit: 
+  NORDIC_COMMAND_LINE_TOOLS_VERSION: "10-24-0/nrf-command-line-tools-10.24.0"
+  arch: amd64
+  native_board: native_sim
+
 on:
   push:
     branches:
@@ -13,19 +21,19 @@ on:
 
 jobs:
   build-and-push:
-    strategy:
-      # Don't overwhelm the toolchain server
-      max-parallel: 1
-      matrix:
-        include:
-          #Build for linux amd64
-          - sdk_nrf_branch: v2.6-branch
-            toolchain_version: v2.6.0
-            # Optional, if you want to use a specific the commit
-            # sdk_nrf_commit: 
-            NORDIC_COMMAND_LINE_TOOLS_VERSION: "10-24-0/nrf-command-line-tools-10.24.0"
-            arch: amd64
-            native_board: native_sim
+    # strategy:
+    #   # Don't overwhelm the toolchain server
+    #   max-parallel: 1
+    #   matrix:
+    #     include:
+    #       #Build for linux amd64
+    #       - sdk_nrf_branch: v2.6-branch
+    #         toolchain_version: v2.6.0
+    #         # Optional, if you want to use a specific the commit
+    #         # sdk_nrf_commit: 
+    #         NORDIC_COMMAND_LINE_TOOLS_VERSION: "10-24-0/nrf-command-line-tools-10.24.0"
+    #         arch: amd64
+    #         native_board: native_sim
         #  #Build for linux arm64
         #   - sdk_nrf_branch: v2.6-branch
         #     toolchain_version: v2.6.0
@@ -75,27 +83,27 @@ jobs:
           context: .
           load: true
           file: Dockerfile
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWERCASE }}:${{ matrix.sdk_nrf_branch }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWERCASE }}:${{ env.sdk_nrf_branch }}
           build-args: |
-            sdk_nrf_branch=${{ matrix.sdk_nrf_branch }}
-            toolchain_version=${{ matrix.toolchain_version }}
+            sdk_nrf_branch=${{ env.sdk_nrf_branch }}
+            toolchain_version=${{ env.toolchain_version }}
 
 
       - name: Ensure nrfjprog works
         run: |
-          docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWERCASE }}:${{ matrix.sdk_nrf_branch }} nrfjprog -v
+          docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWERCASE }}:${{ env.sdk_nrf_branch }} nrfjprog -v
 
       - name: Ensure clang-format works
         run: |
-          docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWERCASE }}:${{ matrix.sdk_nrf_branch }} clang-format --version
+          docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWERCASE }}:${{ env.sdk_nrf_branch }} clang-format --version
 
       - name: Ensure native build works
         run: |
-          docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWERCASE }}:${{ matrix.sdk_nrf_branch }} west build -b ${{ matrix.native_board }} zephyr/samples/hello_world
+          docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWERCASE }}:${{ env.sdk_nrf_branch }} west build -b ${{ env.native_board }} zephyr/samples/hello_world
 
       - name: Ensure zephyr twister unit tests works
         run: |
-          docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWERCASE }}:${{ matrix.sdk_nrf_branch }} ./zephyr/scripts/twister -p ${{ matrix.native_board }} -T zephyr/samples/subsys/testsuite/integration
+          docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWERCASE }}:${{ env.sdk_nrf_branch }} ./zephyr/scripts/twister -p ${{ env.native_board }} -T zephyr/samples/subsys/testsuite/integration
 
 
       - name: Build and push
@@ -105,7 +113,7 @@ jobs:
           file: Dockerfile
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWERCASE }}:${{ matrix.sdk_nrf_branch }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWERCASE }}:${{ env.sdk_nrf_branch }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWERCASE }}:latest
           #platforms: linux/amd64,linux/arm64 # Specify platforms here
           platforms: linux/amd64 # Specify platforms here
