@@ -58,7 +58,7 @@ jobs:
           name: asset_tracker_v2-${{ matrix.sdk_nrf_branch }}
           path: |
             build/zephyr/merged.hex
-            build/zephyr/app_update.bin
+            build/zephyr/signed_by_mcuboot_and_b0_s1_image.bin
 
       - name: Ensure nrfjprog works
         run: |
