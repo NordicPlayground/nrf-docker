@@ -5,7 +5,7 @@
 
 ![Docker + Zephyr -> merged.hex](./diagram.png)
 
-This project defines a Docker image that contains all dependencies to run `west` commands with the nRF Connect SDK. Bind mount the project folder you'd like to build, and the output will end up in the same folder (nested in build/zephyr subdir of the app).
+This project defines a Docker image that contains all dependencies to run `west` commands with the nRF Connect SDK. Bind mount the project folder you'd like to build, and the output will end up in the same folder (nested in build/b0/zephyr subdir of the app).
 
 The aim is to provide an example for a Docker image that can compile application and samples in a [nRF Connect SDK](https://github.com/nrfconnect/sdk-nrf) release branch, not to exactly replicate the software configuration used when the release was made.
 
@@ -81,7 +81,7 @@ docker run --rm \
     west build -p always -b nrf9160dk_nrf9160_ns --build-dir /workdir/project/build
 ```
 
-The firmware file will be located here: `nrf/applications/asset_tracker_v2/build/zephyr/merged.hex`. Because it's inside the folder that is bind mounted when running the image, it is also available outside of the Docker image.
+The firmware file will be located here: `nrf/applications/asset_tracker_v2/build/b0/zephyr/merged.hex`. Because it's inside the folder that is bind mounted when running the image, it is also available outside of the Docker image.
 
 > [!NOTE]
 > The `-p always` build argument is to do a pristine build. It is similar to cleaning the build folder and is used because it is less error-prone to a previous build with different configuration. To speed up subsequent build with the same configuration you can remove this argument to avoid re-building code that haven't been modified since the previous build.
@@ -113,7 +113,7 @@ This builds the `hci_uart` sample and stores the `hci_uart.hex` file in the curr
 docker run --rm nordicplayground/nrfconnect-sdk:main \
     -v ${PWD}:/workdir/project \
     west build zephyr/samples/bluetooth/hci_uart -p always -b nrf9160dk_nrf52840 --build-dir /workdir/project/build
-ls -la build/zephyr && cp build/zephyr/zephyr.hex ./hci_uart.hex
+ls -la build/b0/zephyr && cp build/b0/zephyr/zephyr.hex ./hci_uart.hex
 ```
 
 #### nRF5280 DK example
@@ -125,7 +125,7 @@ docker run --rm nordicplayground/nrfconnect-sdk:main \
   west build zephyr/samples/bluetooth/peripheral_ht -p always -b nrf52840dk_nrf52840 --build-dir /workdir/project/build
 
 # Access build files
-cp build/zephyr/zephyr.hex peripheral_ht.hex
+cp build/b0/zephyr/zephyr.hex peripheral_ht.hex
 ls -la ./peripheral_ht.hex
 ```
 
