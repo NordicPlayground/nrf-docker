@@ -52,14 +52,6 @@ jobs:
             nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} \
               west build -b nrf9160dk_nrf9160_ns --build-dir /workdir/project/build -- -DEXTRA_CFLAGS="-Werror -Wno-dev"
 
-      - uses: actions/upload-artifact@v3
-        with:
-          if-no-files-found: error
-          name: asset_tracker_v2-${{ matrix.sdk_nrf_branch }}
-          path: |
-            build/merged.hex
-            build/signed_by_mcuboot_and_b0_s1_image.bin
-
       - name: Ensure nrfjprog works
         run: |
           docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} nrfjprog -v
