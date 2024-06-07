@@ -1,4 +1,4 @@
-# Dockerfile example for building nRF Connect SDK applications
+# Dockerfile example for building nRF Connect SDK applications on GitHub Actions
 
 ![Publish Docker](https://github.com/NordicPlayground/nrf-docker/workflows/Publish%20Docker/badge.svg?branch=saga)
 (_the [Docker image](https://hub.docker.com/r/nordicplayground/nrfconnect-sdk) is build against [nRF Connect SDK](https://github.com/nrfconnect/sdk-nrf) `main`, and the last 5 release branches every night._)
