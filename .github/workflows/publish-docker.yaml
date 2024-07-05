@@ -20,8 +20,8 @@ jobs:
       max-parallel: 1
       matrix:
         include:
-          - sdk_nrf_branch: v2.6-branch
-            toolchain_version: v2.6.0
+          - sdk_nrf_branch: v2.7-branch
+            toolchain_version: v2.7.0
             native_board: native_sim
 
     runs-on: ubuntu-latest
