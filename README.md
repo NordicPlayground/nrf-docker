@@ -37,7 +37,7 @@ Build the image (this is only needed once):
 
 ```bash
 cd nrf-docker
-docker build -t nrfconnect-sdk --build-arg sdk_nrf_version=v2.6-branch .
+docker build -t nrfconnect-sdk --build-arg sdk_nrf_version=v2.7-branch .
 ```
 
 > [!NOTE]
@@ -101,7 +101,7 @@ docker run --rm -v ${PWD}:/workdir/project \
 # build docker image
 git clone https://github.com/NordicPlayground/nrf-docker
 cd nrf-docker
-docker build -t nrfconnect-sdk --build-arg sdk_nrf_version=v2.6-branch .
+docker build -t nrfconnect-sdk --build-arg sdk_nrf_version=v2.7-branch .
 cd ..
 ```
 
