@@ -1,4 +1,4 @@
-FROM ubuntu:22.04 as base
+FROM ubuntu:24.04 as base
 WORKDIR /workdir
 
 ARG sdk_nrf_branch=v2.7-branch
