@@ -15,7 +15,7 @@ SHELL [ "/bin/bash", "-euxo", "pipefail", "-c" ]
 RUN <<EOT
     apt-get -y update
     apt-get -y upgrade
-    apt-get -y install wget unzip clang-format gcc-multilib make
+    apt-get -y install wget unzip clang-format gcc-multilib make libunistring2
     apt-get -y clean
     rm -rf /var/lib/apt/lists/*
 EOT
