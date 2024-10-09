@@ -12,11 +12,10 @@ ENV DEBIAN_FRONTEND=noninteractive
 SHELL [ "/bin/bash", "-euxo", "pipefail", "-c" ]
 
 # gcc-multilib make = Host tools for native_sim build
-# python 3.8 is installed by toolchain manager hence older version of libffi is required
 RUN <<EOT
     apt-get -y update
     apt-get -y upgrade
-    apt-get -y install wget unzip clang-format gcc-multilib make libffi7
+    apt-get -y install wget unzip clang-format gcc-multilib make
     apt-get -y clean
     rm -rf /var/lib/apt/lists/*
 EOT
